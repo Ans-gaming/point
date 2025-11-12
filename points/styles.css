@@ -20,7 +20,7 @@
 body {
     font-family: var(--font-stack);
     /* Background Image setup */
-    background-image: url('C:\\points\\image\\img.jpg'); 
+    background-image: url('C:/points/image/img.jpg'); 
     background-size: cover; 
     background-position: center; 
     background-attachment: fixed; 
@@ -315,4 +315,5 @@ h1, h2, h3 {
     font-size: 0.85em;
     border-top: 1px solid #e0e0e0;
     background-color: rgba(255, 255, 255, 0.8); 
+
 }
