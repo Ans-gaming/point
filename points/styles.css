@@ -311,7 +311,7 @@ h1, h2, h3 {
 .point-table tbody tr td:last-child {
     font-weight: 700;
     color: var(--color-standings-deep-blue);
-    background-color: rgba(0, 74, 153, 0.1); 
+    background-color: rgba(255, 255, 255, 0.7); /* SAME as first child */
     font-size: 1.1em;
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
@@ -328,3 +328,4 @@ h1, h2, h3 {
     border-top: 1px solid #e0e0e0;
     background-color: rgba(255, 255, 255, 0.8); 
 }
+
