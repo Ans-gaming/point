@@ -297,6 +297,12 @@ h1, h2, h3 {
     color: var(--color-text-dark); /* Ensure standard text is dark */
 }
 
+/* Make TEAM NAME column bold */
+.point-table tbody td:first-child {
+    font-weight: 900;
+    color: var(--color-text-dark); /* keep same color */
+}
+
 .point-table tbody tr td:last-child {
     /* TOTAL PTS COLUMN - Deep Blue Text */
     font-weight: 700;
@@ -317,5 +323,6 @@ h1, h2, h3 {
     background-color: rgba(255, 255, 255, 0.8); 
 
 }
+
 
 
