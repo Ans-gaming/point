@@ -1,37 +1,34 @@
 /* --- Color Palette & Font Setup --- */
 :root {
-    --color-primary: #57e7f7; /* Light Cyan/Sky Blue (Match Entry Title/Form BG) */
-    --color-secondary: #007bff; /* Bright Blue (Accent) */
-    --color-background: #eef3f6; /* Original very light blue/gray - now overridden by image */
-    --color-text-dark: #2c3e50; /* Dark Text */
-    --color-success: #2ecc71; /* Green Accent */
-    --color-warning: #ffc107; /* Gold/Yellow Accent */
-    --color-card-bg-transparent: rgba(255, 255, 255, 0.49); /* Semi-transparent white for cards */
-    --color-contrast-red: #ffffff; /* White for Standings Titles */
+    --color-primary: #57e7f7;
+    --color-secondary: #007bff;
+    --color-background: #eef3f6;
+    --color-text-dark: #2c3e50;
+    --color-success: #2ecc71;
+    --color-warning: #ffc107;
+    --color-card-bg-transparent: rgba(255, 255, 255, 0.49);
+    --color-contrast-red: #ffffff;
     --font-stack: 'Roboto', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    
-    /* NEW VARIABLE for the deep blue used in standings (rgb(0, 0, 255)) */
-    --color-standings-deep-blue: rgb(0, 0, 255); 
-    /* NEW VARIABLE for the requested Bold Red */
-    --color-bold-red: #ff0000; 
+
+    --color-standings-deep-blue: rgb(0, 0, 255);
+    --color-bold-red: #ff0000;
 }
 
 /* --- Global Reset and Typography --- */
 body {
     font-family: var(--font-stack);
-    /* Background Image setup */
     background-image: url('image/img.jpg');
-    background-size: cover; 
-    background-position: center; 
-    background-attachment: fixed; 
-    background-repeat: no-repeat; 
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    background-repeat: no-repeat;
     
     color: var(--color-text-dark);
     margin: 0;
     padding: 0;
     line-height: 1.6;
     min-height: 100vh;
-    overflow-x: hidden; 
+    overflow-x: hidden;
 }
 
 h1, h2, h3 {
@@ -41,46 +38,36 @@ h1, h2, h3 {
 
 /* --- Header --- */
 .app-header {
-    background: rgba(255, 255, 255, 0.182); /* Slightly transparent header for image to show a bit */
+    background: rgba(255, 255, 255, 0.182);
     color: rgb(255, 0, 0);
     padding: 1px 1px;
     text-align: center;
-    /* box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25); */
     margin-bottom: 30px;
-    /* This rule will hide the entire header/nav bar if you still don't want it */
-    /* display: none; */ 
 }
 
 .app-header h1 {
-    /* UPDATED: Main title text set to bold red */
     margin: 0 0 1px 0;
     font-size: 3em;
-    color: var(--color-bold-red); /* SET TO BOLD RED */
-    font-weight: 900; /* Ensure it is BOLD */
+    color: var(--color-bold-red);
+    font-weight: 900;
     letter-spacing: 1px;
 }
 
 .app-header p {
-    /* UPDATED: Main title text set to bold red */
     margin: 0 0 8px 0;
     font-size: 1.7em;
-    color: var(--color-bold-red); /* SET TO BOLD RED */
-    font-weight: 900; /* Ensure it is BOLD */
+    color: var(--color-bold-red);
+    font-weight: 900;
     letter-spacing: 1px;
 }
+
 @media (max-width: 600px) {
-    .app-header h1 {
-        font-size: 2em; 
-    }
-    .app-header p {
-        font-size: 1em;
-    }
-    .app-header {
-        padding: 20px 10px;
-    }
+    .app-header h1 { font-size: 2em; }
+    .app-header p { font-size: 1em; }
+    .app-header { padding: 20px 10px; }
 }
 
-/* --- Main Container & Layout --- */
+/* --- Main Layout --- */
 .container {
     padding: 20px;
     max-width: 1400px;
@@ -92,120 +79,69 @@ h1, h2, h3 {
     grid-template-columns: 1fr 1fr;
     gap: 30px;
 }
+
 @media (max-width: 1200px) {
-    .groups-wrapper {
-        grid-template-columns: 1fr;
-    }
+    .groups-wrapper { grid-template-columns: 1fr; }
 }
 
-
-/* --- Card Styling (Now with transparency) --- */
+/* --- Card Styling --- */
 .group-section.card {
-    background: var(--color-card-bg-transparent); 
+    background: var(--color-card-bg-transparent);
     border-radius: 12px;
     padding: 30px;
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
 }
-@media (max-width: 768px) {
-    .group-section.card {
-        padding: 20px 15px; 
-    }
-}
 
 .group-section.card:hover {
-    transform: translateY(-5px); 
+    transform: translateY(-5px);
     box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 }
 
 .group-section .group-title {
-    /* MATCH ENTRY TITLE BAR - Light Cyan/Sky Blue */
     font-size: 1.8em;
-    padding: 10px; 
-    padding-bottom: 15px; 
-    margin-top: 0;
-    text-align: center; 
-    color: white; 
-    background-color: var(--color-primary); 
-    border-radius: 5px 5px 0 0; 
-    margin-bottom: 10px; 
+    padding: 10px;
+    padding-bottom: 15px;
+    text-align: center;
+    color: white;
+    background-color: var(--color-primary);
+    border-radius: 5px 5px 0 0;
+    margin-bottom: 10px;
 }
 
-
-/* --- Input Form Styling --- */
+/* --- Form Styling --- */
 .match-input {
-    /* Keeping display: flex and flex-wrap: wrap to allow responsiveness */
     display: flex;
-    /* CHANGED: Align items to stretch vertically so inputs line up neatly */
     align-items: stretch;
-    /* CHANGED: Removed align-items: flex-end to allow vertical alignment */
     flex-wrap: wrap;
     gap: 15px;
     padding: 20px;
     border-radius: 8px;
-    /* Form background uses the Light Cyan/Sky Blue */
-    background-color: var(--color-primary); 
-    border: 1px solid #e0e0e0;
-}
-@media (max-width: 768px) {
-    .match-input {
-        flex-direction: column;
-        align-items: stretch;
-        padding: 15px;
-    }
-    .form-group {
-        min-width: 100%; 
-    }
-    .form-group small {
-        margin-bottom: 10px; 
-    }
+    background-color: var(--color-primary);
 }
 
 .form-group {
-    /* CHANGED: Use flexbox to put label/small text on top and input below */
     display: flex;
     flex-direction: column;
     min-width: 160px;
-    /* CHANGED: Allows all 3 inputs to share the space evenly (1/3rd width each) */
-    flex-basis: calc(33.33% - 10px); 
+    flex-basis: calc(33.33% - 10px);
     flex-grow: 1;
 }
 
 .form-group label {
     font-weight: 600;
     margin-bottom: 6px;
-    color: white; /* Label color set to white */
-    font-size: 0.95em;
+    color: white;
 }
 
-.form-group input, .form-group select {
+.form-group input, 
+.form-group select {
     padding: 10px;
     border: 1px solid #ccc;
-    border-radius: 6px;
-    transition: border-color 0.3s, box-shadow 0.3s;
-    background-color: rgba(255, 255, 255, 0.9); /* Slightly transparent inputs */
+    border-radius: 12px; /* ROUND inputs */
+    background-color: rgba(255, 255, 255, 0.9);
 }
 
-.form-group input:focus, .form-group select:focus {
-    border-color: var(--color-secondary);
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
-}
-
-.form-group small {
-    font-size: 0.8em;
-    color: white; /* Small text color set to white */
-    margin-top: 5px;
-}
-
-.button-container {
-    width: 100%; 
-    display: flex;
-    justify-content: center; 
-    margin-top: 15px; 
-}
-
-/* --- Button Styling --- */
 .btn-submit {
     border: none;
     padding: 10px 25px;
@@ -215,106 +151,69 @@ h1, h2, h3 {
     text-transform: uppercase;
     background-color: var(--color-success);
     color: white;
-    box-shadow: 0 4px 10px rgba(46, 204, 113, 0.3);
-    transition: all 0.3s ease;
-}
-
-@media (max-width: 768px) {
-    .btn-submit {
-        width: 100%;
-        margin-top: 0; 
-    }
-    .button-container {
-        margin-top: 0; 
-    }
-}
-
-.btn-submit:hover {
-    background-color: #27ae60;
-    box-shadow: 0 6px 12px rgba(46, 204, 113, 0.4);
-}
-
-.separator {
-    border: 0;
-    height: 1px;
-    background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0));
-    margin: 30px 0;
+    transition: 0.3s;
 }
 
 /* --- Table Styling --- */
 .table-title {
-    /* STANDINGS TITLE BAR - Deep Blue background, White Text */
     margin-top: 40px;
     margin-bottom: 15px;
     font-size: 1.5em;
-    color: var(--color-contrast-red); /* White text */
-    text-align: center; 
-    background-color: var(--color-standings-deep-blue); 
+    color: var(--color-contrast-red);
+    text-align: center;
+    background-color: var(--color-standings-deep-blue);
     border-radius: 5px;
-    padding: 10px 0; 
+    padding: 10px 0;
 }
 
 .table-scroll {
-    overflow-x: auto; 
-    -webkit-overflow-scrolling: touch; 
+    overflow-x: auto;
     margin-bottom: 20px;
 }
 
 .point-table {
-    width: 100%; 
-    border-collapse: separate; 
-    border-spacing: 0 8px;
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 10px; /* GAP between rows */
 }
 
 .point-table thead th {
-    /* TABLE HEADER - Deep Blue */
-    background-color: var(--color-standings-deep-blue); 
+    background-color: var(--color-standings-deep-blue);
     color: white;
     padding: 12px 8px;
     font-weight: 700;
-    text-align: left;
     text-transform: uppercase;
-    font-size: 0.8em; 
-    letter-spacing: 0.5px;
+    font-size: 0.8em;
 }
 
-.point-table tbody tr {
-    background-color: rgba(255, 255, 255, 0.7); 
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-    transition: background-color 0.3s;
-    border-radius: 20px; /* 🔥 ROUND EACH ROW */
-    overflow: hidden; /* IMPORTANT so rounding works */
-}
-
-.point-table tbody tr td {
-    border: none;
-}
-
-.point-table tbody tr:hover {
-    background-color: rgba(230, 247, 255, 0.8); 
-}
-
+/* 🔥 ROUND EACH TEAM ROW USING TDs */
 .point-table tbody td {
-    /* REGULAR TABLE DATA - Default Dark Text */
     padding: 12px 8px;
-    border: none;
     font-size: 0.9em;
-    vertical-align: middle;
-    color: var(--color-text-dark); /* Ensure standard text is dark */
+    color: var(--color-text-dark);
+    background-color: rgba(255, 255, 255, 0.75);
 }
 
-/* Make TEAM NAME column bold */
-.point-table tbody td:first-child {
-    font-weight: 900;
-    color: var(--color-text-dark); /* keep same color */
+/* Left rounded corners */
+.point-table tbody tr td:first-child {
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+    font-weight: 900; /* TEAM NAME bold */
 }
 
+/* Right rounded corners */
 .point-table tbody tr td:last-child {
-    /* TOTAL PTS COLUMN - Deep Blue Text */
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+
     font-weight: 700;
-    color: var(--color-standings-deep-blue); /* Text color set to Deep Blue */
-    background-color: rgba(0, 74, 153, 0.1); 
+    color: var(--color-standings-deep-blue);
+    background-color: rgba(0, 74, 153, 0.1);
     font-size: 1.1em;
+}
+
+.point-table tbody tr:hover td {
+    background-color: rgba(230, 247, 255, 0.9);
 }
 
 /* --- Footer --- */
@@ -322,11 +221,7 @@ h1, h2, h3 {
     text-align: center;
     padding: 25px 0;
     margin-top: 50px;
-    color: var(--color-bold-red); /* CHANGED to Bold Red */
-    font-weight: 900; /* Ensure it is BOLD */
-    font-size: 0.85em;
-    border-top: 1px solid #e0e0e0;
-    background-color: rgba(255, 255, 255, 0.8); 
-
+    color: var(--color-bold-red);
+    font-weight: 900;
+    background-color: rgba(255, 255, 255, 0.8);
 }
-
