@@ -6,15 +6,25 @@ document.addEventListener('DOMContentLoaded', () => {
     let groupDataDefaults = {
         A: [
             // --- NEW TEAM NAMES FOR GROUP A ---
-            { name: "Team Phoenix", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Dragon", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Griffin", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
+            { name: "GAMING MACHA", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "ALIAN FF", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "DARK HUNTER", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "LOVEGURU GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "NIGHT HUNTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "SKY SHOOTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "ANS GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ],
         B: [
             // --- NEW TEAM NAMES FOR GROUP B ---
-            { name: "Team Titan", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Atlas", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Orion", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
+            { name: "Team Phoenix", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "Team Dragon", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "Team Griffin", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "Team Phoenix", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "Team Dragon", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "Team Griffin", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "Team Dragon", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "Team Griffin", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ]
     };
 
