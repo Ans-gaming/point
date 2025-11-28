@@ -6,9 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     let groupDataDefaults = {
         A: [
             // --- NEW TEAM NAMES FOR GROUP A ---
-            { name: "Team ANS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Comet", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Zenith", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
+            { name: "GAMING MACHA", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: " KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "ALIAN FF", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "GAMING MACHA", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: " KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "ALIAN FF", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "GAMING MACHA", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: " KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ],
         B: [
             // --- NEW TEAM NAMES FOR GROUP B ---
@@ -209,4 +214,5 @@ document.addEventListener('DOMContentLoaded', () => {
     // Attach change listeners for dynamic filtering
     document.getElementById('winningTeamA').addEventListener('change', () => filterLoserSelect('A'));
     document.getElementById('winningTeamB').addEventListener('change', () => filterLoserSelect('B'));
+
 });
