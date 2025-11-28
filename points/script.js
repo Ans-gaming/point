@@ -7,13 +7,13 @@ document.addEventListener('DOMContentLoaded', () => {
         A: [
             // --- NEW TEAM NAMES FOR GROUP A ---
             { name: "GAMING MACHA", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: " KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "ALIAN FF", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "GAMING MACHA", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: " KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "ALIAN FF", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "GAMING MACHA", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: " KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
+            { name: "DARK HUNTER", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "LOVEGURU GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "NIGHT HUNTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "SKY SHOOTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "ANS GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ],
         B: [
             // --- NEW TEAM NAMES FOR GROUP B ---
@@ -216,3 +216,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('winningTeamB').addEventListener('change', () => filterLoserSelect('B'));
 
 });
+
