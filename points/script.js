@@ -17,14 +17,14 @@ document.addEventListener('DOMContentLoaded', () => {
         ],
         B: [
             // --- NEW TEAM NAMES FOR GROUP B ---
-            { name: "Team Phoenix", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Dragon", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Griffin", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Phoenix", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Dragon", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Griffin", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Dragon", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Griffin", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
+            { name: "TEAM SOUL", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "OP ABHIRAM", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "BLACK 777", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "VIP GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "MRAK", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "RED MAX", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "STAY MAX", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "VINAY GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ]
     };
 
