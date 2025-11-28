@@ -6,20 +6,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let groupDataDefaults = {
         A: [
             // --- NEW TEAM NAMES FOR GROUP A ---
-            { name: "GAMING MACHA", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "ALIAN FF", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "DARK HUNTER", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "LOVEGURU GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "NIGHT HUNTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "SKY SHOOTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "ANS GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
+            { name: "Team Phoenix", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "Team Dragon", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "Team Griffin", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ],
         B: [
             // --- NEW TEAM NAMES FOR GROUP B ---
-            { name: "Team Blade", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Phantom", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "Team Ghost", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
+            { name: "Team Titan", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "Team Atlas", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "Team Orion", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ]
     };
 
@@ -34,31 +29,10 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Local Storage Functions ---
 
     function loadData() {
-        const storedData = localStorage.getItem(STORAGE_KEY);
-        
-        // CHECK 1: If data exists in storage, use it.
-        if (storedData) {
-            try {
-                const parsedData = JSON.parse(storedData);
-                
-                // CHECK 2: Ensure the parsed data has the required group structure (A and B).
-                if (parsedData.A && parsedData.B) {
-                    groupData = parsedData;
-                    // IMPORTANT: We need to ensure new team names are present if old data is loaded.
-                    // This logic merges existing data if possible, otherwise it just uses defaults.
-                    // Since the user reported data was being cleared, we'll revert to the standard load logic, 
-                    // which assumes the storage data is valid and up-to-date with current team names 
-                    // after the initial "forced reset" provided in the last step.
-                    return; 
-                }
-            } catch (e) {
-                console.error("Error parsing stored data, using defaults.", e);
-            }
-        }
-        
-        // If no valid data was found (or was not set initially), use defaults and save.
+        // *** MODIFIED LOGIC: We force a clean start by overriding any old stored data with the new defaults. ***
+        // This ensures the new team names and zero scores are loaded immediately and old data is cleared.
         groupData = groupDataDefaults;
-        saveData(); // Save the defaults immediately if local storage was empty
+        saveData(); // Overwrite old data with clean defaults immediately.
     }
 
     function saveData() {
@@ -154,6 +128,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Update Loser's stats (Loser gets -RoundsPoints)
         loser.lost += 1;
+        // The loser's roundsPoints are subtracted from their total roundsPoints
         loser.roundsPoints += (-roundPts); 
         loser.totalPoints = loser.won * POINTS_PER_WIN; 
     }
@@ -165,10 +140,10 @@ document.addEventListener('DOMContentLoaded', () => {
     function handleFormSubmit(e) {
         e.preventDefault();
 
-        // Custom error messaging instead of alert()
+        // Use a custom modal instead of alert()
         const showMessage = (message) => {
             console.error(message);
-            // Using alert temporarily for functional demo
+            // Temporary use of alert for functionality demo
             alert(message); 
         };
 
@@ -214,6 +189,4 @@ document.addEventListener('DOMContentLoaded', () => {
     // Attach change listeners for dynamic filtering
     document.getElementById('winningTeamA').addEventListener('change', () => filterLoserSelect('A'));
     document.getElementById('winningTeamB').addEventListener('change', () => filterLoserSelect('B'));
-
 });
-
