@@ -13,7 +13,8 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: "LOVEGURU GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "NIGHT HUNTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "SKY SHOOTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "ANS GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
+            { name: "ANS GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "SMARTY BOY", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ],
         B: [
             // --- NEW TEAM NAMES FOR GROUP B ---
@@ -24,7 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: "MRAK", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "RED MAX", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "STAY MAX", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "VINAY GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
+            { name: "VINAY GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "BLUE DEVIL", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ]
     };
 
@@ -200,3 +202,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('winningTeamA').addEventListener('change', () => filterLoserSelect('A'));
     document.getElementById('winningTeamB').addEventListener('change', () => filterLoserSelect('B'));
 });
+
