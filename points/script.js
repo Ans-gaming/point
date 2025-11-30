@@ -36,18 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     const POINTS_PER_WIN = 4;
 
-    // -----------------------------------------
-    // ✅ FIXED loadData (no more deleting data)
-    // -----------------------------------------
+    // LOAD DATA
     function loadData() {
-        const saved = localStorage.getItem(STORAGE_KEY);
-        
-        if (saved) {
-            groupData = JSON.parse(saved);  // load saved data
-        } else {
-            groupData = groupDataDefaults;  // first time only
-            saveData();
-        }
+        groupData = groupDataDefaults;
+        saveData();
     }
 
     function saveData() {
@@ -60,8 +52,9 @@ document.addEventListener('DOMContentLoaded', () => {
         const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
 
         teamData.sort((a, b) => {
-            if (b.totalPoints !== a.totalPoints)
+            if (b.totalPoints !== a.totalPoints) {
                 return b.totalPoints - a.totalPoints;
+            }
             return b.roundsPoints - a.roundsPoints;
         });
 
@@ -81,78 +74,83 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // POPULATE DROPDOWNS
+    // POPULATE FORMS
     function populateTeamSelects(groupKey) {
         const winSel = document.getElementById(`winningTeam${groupKey}`);
         const loseSel = document.getElementById(`losingTeam${groupKey}`);
-        const names = groupData[groupKey].map(t => t.name);
+        const teamNames = groupData[groupKey].map(t => t.name);
 
-        const set = (sel, text) => {
-            sel.innerHTML = `<option disabled selected>${text}</option>`;
-            names.forEach(n => sel.appendChild(new Option(n, n)));
+        const setOptions = (select, placeholder) => {
+            select.innerHTML = `<option disabled selected>${placeholder}</option>`;
+            teamNames.forEach(n => select.appendChild(new Option(n, n)));
         };
 
-        set(winSel, "Select Winner");
-        set(loseSel, "Select Loser");
+        setOptions(winSel, "Select Winner");
+        setOptions(loseSel, "Select Loser");
+
         filterLoserSelect(groupKey);
     }
 
     // FILTER LOSER OPTIONS
     function filterLoserSelect(groupKey) {
-        const winSel = document.getElementById(`winningTeam${groupKey}`);
-        const loseSel = document.getElementById(`losingTeam${groupKey}`);
+        const win = document.getElementById(`winningTeam${groupKey}`);
+        const lose = document.getElementById(`losingTeam${groupKey}`);
+        const selected = win.value;
 
-        loseSel.innerHTML = '<option disabled selected>Select Loser</option>';
+        lose.innerHTML = '<option disabled selected>Select Loser</option>';
 
         groupData[groupKey].forEach(t => {
-            if (t.name !== winSel.value)
-                loseSel.appendChild(new Option(t.name, t.name));
+            if (t.name !== selected) {
+                lose.appendChild(new Option(t.name, t.name));
+            }
         });
     }
 
-    // APPLY MATCH RESULTS
-    function calculateAndApplyScores(arr, winnerName, loserName, lostRounds) {
-        const winner = arr.find(t => t.name === winnerName);
-        const loser = arr.find(t => t.name === loserName);
+    // APPLY MATCH RESULT
+    function calculateAndApplyScores(teamArray, winnerName, loserName, lostRounds) {
+        const winner = teamArray.find(t => t.name === winnerName);
+        const loser = teamArray.find(t => t.name === loserName);
 
         const roundPts = ROUNDS_MAPPING[lostRounds] || 0;
 
+        // WINNER UPDATE
         winner.won += 1;
         winner.roundsPoints += roundPts;
         winner.totalPoints = winner.won * POINTS_PER_WIN;
 
+        // LOSER UPDATE
         loser.lost += 1;
         loser.roundsPoints -= roundPts;
         loser.totalPoints = loser.won * POINTS_PER_WIN;
     }
 
-    // FORM SUBMISSION
+    // FORM HANDLERS
     document.getElementById('matchFormA').addEventListener('submit', handleFormSubmit);
     document.getElementById('matchFormB').addEventListener('submit', handleFormSubmit);
 
     function handleFormSubmit(e) {
         e.preventDefault();
 
-        const g = e.target.getAttribute("data-group");
-        const winner = document.getElementById(`winningTeam${g}`).value;
-        const loser = document.getElementById(`losingTeam${g}`).value;
-        const lostRounds = parseInt(document.getElementById(`lostRounds${g}`).value);
+        const groupKey = e.target.getAttribute("data-group");
+        const winner = document.getElementById(`winningTeam${groupKey}`).value;
+        const loser = document.getElementById(`losingTeam${groupKey}`).value;
+        const lostRounds = parseInt(document.getElementById(`lostRounds${groupKey}`).value);
 
         if (!winner || !loser || winner === loser) {
             alert("Select valid teams.");
             return;
         }
         if (lostRounds < 0 || lostRounds > 7) {
-            alert("Lost rounds must be 0–7.");
+            alert("Lost rounds must be 0-7.");
             return;
         }
 
-        calculateAndApplyScores(groupData[g], winner, loser, lostRounds);
+        calculateAndApplyScores(groupData[groupKey], winner, loser, lostRounds);
 
         saveData();
-        renderTable(g);
+        renderTable(groupKey);
         e.target.reset();
-        populateTeamSelects(g);
+        populateTeamSelects(groupKey);
     }
 
     // ------------------------------------------------------
@@ -175,24 +173,22 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // FINAL TIE BREAKER FUNCTION (PLAYED+1, LOST+1, -ROUNDS)
     function applyTieBreaker(groupKey, team1, team2, penalty) {
-
         const arr = groupData[groupKey];
         const t1 = arr.find(t => t.name === team1);
         const t2 = arr.find(t => t.name === team2);
 
         if (!t1 || !t2) return;
 
-        // Deduct round points
+        // ROUND POINT DEDUCTION
         t1.roundsPoints -= penalty;
         t2.roundsPoints -= penalty;
 
-        // Played +1 because Lost +1
+        // MATCH COUNTS (played increments because lost increments)
         t1.lost += 1;
         t2.lost += 1;
 
-        // Total points unchanged
+        // TOTAL POINTS DO NOT CHANGE
         t1.totalPoints = t1.won * 4;
         t2.totalPoints = t2.won * 4;
 
@@ -205,7 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("tieGroupSelect").addEventListener("change", populateTieBreakerTeams);
 
     document.getElementById("tieApplyBtn").addEventListener("click", () => {
-
         const groupKey = document.getElementById("tieGroupSelect").value;
         const t1 = document.getElementById("tieTeam1").value;
         const t2 = document.getElementById("tieTeam2").value;
@@ -236,3 +231,4 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById("winningTeamB").addEventListener("change", () => filterLoserSelect("B"));
 
 });
+
