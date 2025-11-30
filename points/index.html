@@ -52,8 +52,7 @@
                                 <th>Total Pts</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
             </section>
@@ -94,14 +93,45 @@
                                 <th>Total Pts</th>
                             </tr>
                         </thead>
-                        <tbody>
-                            </tbody>
+                        <tbody></tbody>
                     </table>
                 </div>
             </section>
         </div>
+
+        <!-- ⭐⭐⭐ TIE BREAKER SECTION ⭐⭐⭐ -->
+        <section class="group-section card">
+            <h2 class="group-title">Tie Breaker</h2>
+
+            <div class="form-group">
+                <label>Select Group:</label>
+                <select id="tieGroupSelect">
+                    <option value="A">Group A</option>
+                    <option value="B">Group B</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Team 1:</label>
+                <select id="tieTeam1"></select>
+            </div>
+
+            <div class="form-group">
+                <label>Team 2:</label>
+                <select id="tieTeam2"></select>
+            </div>
+
+            <div class="form-group">
+                <label>Penalty (Default 10):</label>
+                <input type="number" id="tiePenalty" value="10" min="1">
+            </div>
+
+            <button id="tieApplyBtn" class="btn btn-submit">Apply Tie Breaker</button>
+        </section>
+
     </main>
 
     <script src="script.js"></script>
 </body>
+
 </html>
