@@ -5,7 +5,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. INITIAL DATA STORE (Defaults used only if nothing is in Local Storage)
     let groupDataDefaults = {
         A: [
-            // --- NEW TEAM NAMES FOR GROUP A ---
             { name: "GAMING MACHA", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "ALIAN FF", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
@@ -17,7 +16,6 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: "SMARTY BOY", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ],
         B: [
-            // --- NEW TEAM NAMES FOR GROUP B ---
             { name: "TEAM SOUL", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "OP ABHIRAM", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "BLACK 777", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
@@ -25,35 +23,27 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: "MRAK", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "RED MAX", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "STAY MAX", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "VINAY GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "VINAY GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "BLUE DEVIL", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ]
     };
 
     let groupData; 
 
-    // MAPPING & CONSTANTS
     const ROUNDS_MAPPING = { 
         0: 10, 1: 9, 2: 8, 3: 7, 4: 6, 5: 5, 6: 4, 7: 3
     };
     const POINTS_PER_WIN = 4;
 
-    // --- Local Storage Functions ---
-
     function loadData() {
-        // *** MODIFIED LOGIC: We force a clean start by overriding any old stored data with the new defaults. ***
-        // This ensures the new team names and zero scores are loaded immediately and old data is cleared.
         groupData = groupDataDefaults;
-        saveData(); // Overwrite old data with clean defaults immediately.
+        saveData();
     }
 
     function saveData() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(groupData));
     }
 
-    // --- Core Functions ---
-
-    // 2. RENDERING FUNCTION
     function renderTable(groupKey) {
         const teamData = groupData[groupKey];
         const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
@@ -81,8 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. DROPDOWN POPULATION & FILTERING
-    
     function populateTeamSelects(groupKey) {
         const winningSelect = document.getElementById(`winningTeam${groupKey}`);
         const losingSelect = document.getElementById(`losingTeam${groupKey}`);
@@ -105,26 +93,18 @@ document.addEventListener('DOMContentLoaded', () => {
         const winningSelect = document.getElementById(`winningTeam${groupKey}`);
         const losingSelect = document.getElementById(`losingTeam${groupKey}`);
         const selectedWinner = winningSelect.value;
-        const currentLoser = losingSelect.value;
-        
+
         const teamNames = groupData[groupKey].map(t => t.name);
         
         losingSelect.innerHTML = '<option value="" disabled selected>Select Loser</option>';
         
         teamNames.forEach(name => {
             if (name !== selectedWinner) {
-                const option = new Option(name, name);
-                losingSelect.appendChild(option);
+                losingSelect.appendChild(new Option(name, name));
             }
         });
-
-        if (currentLoser && currentLoser !== selectedWinner) {
-            losingSelect.value = currentLoser;
-        }
     }
 
-
-    // 4. SCORING LOGIC
     function calculateAndApplyScores(teamArray, winnerName, loserName, lostRounds) {
         const winner = teamArray.find(t => t.name === winnerName);
         const loser = teamArray.find(t => t.name === loserName);
@@ -133,31 +113,22 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const roundPts = ROUNDS_MAPPING[lostRounds] || 0; 
         
-        // Update Winner's stats
         winner.won += 1;
         winner.roundsPoints += roundPts; 
         winner.totalPoints = winner.won * POINTS_PER_WIN;
         
-        // Update Loser's stats (Loser gets -RoundsPoints)
         loser.lost += 1;
-        // The loser's roundsPoints are subtracted from their total roundsPoints
         loser.roundsPoints += (-roundPts); 
         loser.totalPoints = loser.won * POINTS_PER_WIN; 
     }
 
-    // 5. FORM SUBMISSION HANDLER
     document.getElementById('matchFormA').addEventListener('submit', handleFormSubmit);
     document.getElementById('matchFormB').addEventListener('submit', handleFormSubmit);
 
     function handleFormSubmit(e) {
         e.preventDefault();
 
-        // Use a custom modal instead of alert()
-        const showMessage = (message) => {
-            console.error(message);
-            // Temporary use of alert for functionality demo
-            alert(message); 
-        };
+        const showMessage = (message) => alert(message);
 
         const groupKey = e.currentTarget.getAttribute('data-group');
         const teamArray = groupData[groupKey];
@@ -177,7 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         
         if (isNaN(lostRounds) || lostRounds < 0 || lostRounds > 7) {
-            showMessage(`Group ${groupKey}: Invalid input for lost rounds. Please enter a number between 0 and 7.`);
+            showMessage(`Group ${groupKey}: Invalid input for lost rounds. Please enter 0-7.`);
             return;
         }
 
@@ -186,20 +157,81 @@ document.addEventListener('DOMContentLoaded', () => {
         renderTable(groupKey); 
         e.currentTarget.reset();
         
-        // Repopulate to reset the dropdowns to their initial state
         populateTeamSelects(groupKey); 
     }
 
-    // --- Initialization ---
+    // --------------------------
+    // ⭐⭐⭐ TIE BREAKER FUNCTIONS ⭐⭐⭐
+    // --------------------------
+
+    function populateTieBreakerTeams() {
+        const groupKey = document.getElementById('tieGroupSelect').value;
+        const teamList = groupData[groupKey].map(t => t.name);
+
+        const t1 = document.getElementById('tieTeam1');
+        const t2 = document.getElementById('tieTeam2');
+
+        t1.innerHTML = '<option disabled selected>Select Team 1</option>';
+        t2.innerHTML = '<option disabled selected>Select Team 2</option>';
+
+        teamList.forEach(name => {
+            t1.appendChild(new Option(name, name));
+            t2.appendChild(new Option(name, name));
+        });
+    }
+
+    function applyTieBreaker(groupKey, team1, team2, penalty) {
+
+        const teamArray = groupData[groupKey];
+        const t1 = teamArray.find(t => t.name === team1);
+        const t2 = teamArray.find(t => t.name === team2);
+
+        if (!t1 || !t2) return;
+
+        t1.roundsPoints -= penalty;
+        t2.roundsPoints -= penalty;
+
+        saveData();
+        renderTable(groupKey);
+
+        alert(`Tie Breaker Applied!\n${team1}: -${penalty}\n${team2}: -${penalty}`);
+    }
+
+    document.getElementById('tieGroupSelect').addEventListener('change', populateTieBreakerTeams);
+
+    document.getElementById('tieApplyBtn').addEventListener('click', () => {
+
+        const groupKey = document.getElementById('tieGroupSelect').value;
+        const t1 = document.getElementById('tieTeam1').value;
+        const t2 = document.getElementById('tieTeam2').value;
+        const penalty = parseInt(document.getElementById('tiePenalty').value);
+
+        if (!t1 || !t2) {
+            alert("Select both teams for tie breaker.");
+            return;
+        }
+
+        if (t1 === t2) {
+            alert("Both teams cannot be the same.");
+            return;
+        }
+
+        applyTieBreaker(groupKey, t1, t2, penalty);
+    });
+
+    // --------------------------
+    // INITIAL LOAD
+    // --------------------------
+
     loadData();
-    // After loading, populate the dropdowns and render the tables
     populateTeamSelects('A');
     populateTeamSelects('B');
     renderTable('A'); 
     renderTable('B');
-    
-    // Attach change listeners for dynamic filtering
+
+    populateTieBreakerTeams();
+
     document.getElementById('winningTeamA').addEventListener('change', () => filterLoserSelect('A'));
     document.getElementById('winningTeamB').addEventListener('change', () => filterLoserSelect('B'));
-});
 
+});
