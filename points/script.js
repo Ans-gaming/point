@@ -239,3 +239,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 });
 
+document.getElementById("resetDataBtn").addEventListener("click", () => {
+    if (confirm("Are you sure? This will clear all tournament data.")) {
+        localStorage.removeItem('tournamentDataGroups');
+        alert("Data cleared! Page will reload.");
+        location.reload();
+    }
+});
+
+
