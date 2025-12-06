@@ -55,34 +55,64 @@ document.addEventListener('DOMContentLoaded', () => {
     function saveData() {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(groupData));
     }
+let previousRanks = {
+    A: {},
+    B: {}
+};
 
     // RENDER TABLE
-    function renderTable(groupKey) {
-        const teamData = groupData[groupKey];
-        const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
+   function renderTable(groupKey) {
+    const teamData = groupData[groupKey];
+    const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
 
-        teamData.sort((a, b) => {
-            if (b.totalPoints !== a.totalPoints)
-                return b.totalPoints - a.totalPoints;
-            return b.roundsPoints - a.roundsPoints;
-        });
+    // 🟡 1. Store old ranking before sorting
+    const oldOrder = [...teamData].map(t => t.name);
+    previousRanks[groupKey] = {};
+    oldOrder.forEach((name, index) => previousRanks[groupKey][name] = index);
 
-        tableBody.innerHTML = '';
-        teamData.forEach(team => {
-            const played = team.won + team.lost;
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${team.name}</td>
-                <td>${played}</td>
-                <td>${team.won}</td>
-                <td>${team.lost}</td>
-                <td>${team.roundsPoints}</td>
-                <td>${team.totalPoints}</td>
-            `;
-            tableBody.appendChild(row);
-        });
-    }
+    // 🟢 2. Sort teams normally
+    teamData.sort((a, b) => {
+        if (b.totalPoints !== a.totalPoints)
+            return b.totalPoints - a.totalPoints;
+        return b.roundsPoints - a.roundsPoints;
+    });
 
+    // 🟢 3. After sorting, identify new rankings
+    const newOrder = teamData.map(t => t.name);
+
+    tableBody.innerHTML = '';
+    
+    teamData.forEach((team, newIndex) => {
+        const oldIndex = previousRanks[groupKey][team.name];
+
+        let icon = "–";     // default: no movement
+        let color = "gray";
+
+        if (oldIndex > newIndex) { 
+            icon = "▲";     // moved up
+            color = "green";
+        }
+        else if (oldIndex < newIndex) {
+            icon = "▼";     // moved down
+            color = "red";
+        }
+
+        const played = team.won + team.lost;
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td><span style="color:${color}; font-weight:bold; margin-right:5px;">${icon}</span>${team.name}</td>
+            <td>${played}</td>
+            <td>${team.won}</td>
+            <td>${team.lost}</td>
+            <td>${team.roundsPoints}</td>
+            <td>${team.totalPoints}</td>
+        `;
+
+        tableBody.appendChild(row);
+    });
+}
+      
     // POPULATE DROPDOWNS
     function populateTeamSelects(groupKey) {
         const winSel = document.getElementById(`winningTeam${groupKey}`);
@@ -246,5 +276,6 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
