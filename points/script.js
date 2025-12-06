@@ -133,33 +133,60 @@ let previousRanks = {
 }
   
     // POPULATE DROPDOWNS
-    function populateTeamSelects(groupKey) {
-        const winSel = document.getElementById(`winningTeam${groupKey}`);
-        const loseSel = document.getElementById(`losingTeam${groupKey}`);
-        const names = groupData[groupKey].map(t => t.name);
+ function populateTeamSelects(groupKey) {
+    const winSel = document.getElementById(`winningTeam${groupKey}`);
+    const loseSel = document.getElementById(`losingTeam${groupKey}`);
+    const teams = groupData[groupKey];
 
-        const set = (sel, text) => {
-            sel.innerHTML = `<option disabled selected>${text}</option>`;
-            names.forEach(n => sel.appendChild(new Option(n, n)));
-        };
+    // Helper to fill dropdowns
+    const setDropdown = (select, placeholder) => {
+        select.innerHTML = `<option disabled selected>${placeholder}</option>`;
 
-        set(winSel, "Select Winner");
-        set(loseSel, "Select Loser");
-        filterLoserSelect(groupKey);
-    }
+        teams.forEach(team => {
+            const played = team.won + team.lost;
+            const opt = new Option(team.name, team.name);
+
+            // ⭐ If played 9 matches → disable option
+            if (played >= 9) {
+                opt.disabled = true;
+                opt.style.color = "gray";
+            }
+
+            select.appendChild(opt);
+        });
+    };
+
+    setDropdown(winSel, "Select Winner");
+    setDropdown(loseSel, "Select Loser");
+
+    filterLoserSelect(groupKey);
+}
 
     // FILTER LOSER OPTIONS
     function filterLoserSelect(groupKey) {
-        const winSel = document.getElementById(`winningTeam${groupKey}`);
-        const loseSel = document.getElementById(`losingTeam${groupKey}`);
+    const winSel = document.getElementById(`winningTeam${groupKey}`);
+    const loseSel = document.getElementById(`losingTeam${groupKey}`);
+    const teams = groupData[groupKey];
 
-        loseSel.innerHTML = '<option disabled selected>Select Loser</option>';
+    loseSel.innerHTML = '<option disabled selected>Select Loser</option>';
 
-        groupData[groupKey].forEach(t => {
-            if (t.name !== winSel.value)
-                loseSel.appendChild(new Option(t.name, t.name));
-        });
-    }
+    teams.forEach(team => {
+        const played = team.won + team.lost;
+
+        // Skip winner team
+        if (team.name === winSel.value) return;
+
+        const opt = new Option(team.name, team.name);
+
+        // ⭐ Disable team if it has completed 9 matches
+        if (played >= 9) {
+            opt.disabled = true;
+            opt.style.color = "gray";
+        }
+
+        loseSel.appendChild(opt);
+    });
+}
 
     // APPLY MATCH RESULTS
     function calculateAndApplyScores(arr, winnerName, loserName, lostRounds) {
@@ -295,6 +322,7 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
 
