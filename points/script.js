@@ -69,13 +69,15 @@ let previousRanks = {
     previousRanks[groupKey] = {};
     oldOrder.forEach((name, index) => previousRanks[groupKey][name] = index);
 
+    // Sort normally
     teamData.sort((a, b) => {
         if (b.totalPoints !== a.totalPoints)
             return b.totalPoints - a.totalPoints;
         return b.roundsPoints - a.roundsPoints;
     });
 
-    const newOrder = teamData.map(t => t.name);
+    // ⭐ Check if ALL teams played 9 matches
+    const allPlayed = teamData.every(t => (t.won + t.lost) === 9);
 
     tableBody.innerHTML = '';
 
@@ -90,28 +92,29 @@ let previousRanks = {
             icon = "▲";
             color = "green";
             blinkClass = "arrow-blink";
-        } 
-        else if (oldIndex < newIndex) {
+        } else if (oldIndex < newIndex) {
             icon = "▼";
             color = "red";
             blinkClass = "arrow-blink";
         }
 
         const played = team.won + team.lost;
-
         const row = document.createElement('tr');
-        row.style.transform = `translateY(${(oldIndex - newIndex) * 10}px)`;
 
-        setTimeout(() => {
-            row.style.transform = "translateY(0)";
-        }, 20);
+        // ⭐ Smooth slide animation
+        row.style.transform = `translateY(${(oldIndex - newIndex) * 10}px)`;
+        setTimeout(() => row.style.transform = "translateY(0)", 20);
+
+        // ⭐ Qualification badge only when ALL played 9 matches
+        const isQualified = allPlayed && newIndex < 5;
+        const badge = isQualified ? `<span class="qualify-badge">QUALIFIED</span>` : "";
 
         row.innerHTML = `
             <td>
                 <span class="${blinkClass}" style="color:${color}; font-weight:bold; margin-right:5px;">
                     ${icon}
                 </span>
-                ${team.name}
+                ${team.name} ${badge}
             </td>
             <td>${played}</td>
             <td>${team.won}</td>
@@ -119,6 +122,11 @@ let previousRanks = {
             <td>${team.roundsPoints}</td>
             <td>${team.totalPoints}</td>
         `;
+
+        // ⭐ Add highlight class AFTER all teams complete 9 matches
+        if (isQualified) {
+            row.classList.add("qualified");
+        }
 
         tableBody.appendChild(row);
     });
@@ -287,6 +295,7 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
 
