@@ -61,47 +61,58 @@ let previousRanks = {
 };
 
     // RENDER TABLE
-   function renderTable(groupKey) {
+  function renderTable(groupKey) {
     const teamData = groupData[groupKey];
     const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
 
-    // 🟡 1. Store old ranking before sorting
     const oldOrder = [...teamData].map(t => t.name);
     previousRanks[groupKey] = {};
     oldOrder.forEach((name, index) => previousRanks[groupKey][name] = index);
 
-    // 🟢 2. Sort teams normally
     teamData.sort((a, b) => {
         if (b.totalPoints !== a.totalPoints)
             return b.totalPoints - a.totalPoints;
         return b.roundsPoints - a.roundsPoints;
     });
 
-    // 🟢 3. After sorting, identify new rankings
     const newOrder = teamData.map(t => t.name);
 
     tableBody.innerHTML = '';
-    
+
     teamData.forEach((team, newIndex) => {
         const oldIndex = previousRanks[groupKey][team.name];
 
-        let icon = "–";     // default: no movement
+        let icon = "–";
         let color = "gray";
+        let blinkClass = "";
 
-        if (oldIndex > newIndex) { 
-            icon = "▲";     // moved up
+        if (oldIndex > newIndex) {
+            icon = "▲";
             color = "green";
-        }
+            blinkClass = "arrow-blink";
+        } 
         else if (oldIndex < newIndex) {
-            icon = "▼";     // moved down
+            icon = "▼";
             color = "red";
+            blinkClass = "arrow-blink";
         }
 
         const played = team.won + team.lost;
 
         const row = document.createElement('tr');
+        row.style.transform = `translateY(${(oldIndex - newIndex) * 10}px)`;
+
+        setTimeout(() => {
+            row.style.transform = "translateY(0)";
+        }, 20);
+
         row.innerHTML = `
-            <td><span style="color:${color}; font-weight:bold; margin-right:5px;">${icon}</span>${team.name}</td>
+            <td>
+                <span class="${blinkClass}" style="color:${color}; font-weight:bold; margin-right:5px;">
+                    ${icon}
+                </span>
+                ${team.name}
+            </td>
             <td>${played}</td>
             <td>${team.won}</td>
             <td>${team.lost}</td>
@@ -112,7 +123,7 @@ let previousRanks = {
         tableBody.appendChild(row);
     });
 }
-      
+  
     // POPULATE DROPDOWNS
     function populateTeamSelects(groupKey) {
         const winSel = document.getElementById(`winningTeam${groupKey}`);
@@ -276,6 +287,7 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
 
