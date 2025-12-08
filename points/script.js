@@ -111,11 +111,15 @@ let previousRanks = {
 
         row.innerHTML = `
             <td>
-                <span class="${blinkClass}" style="color:${color}; font-weight:bold; margin-right:5px;">
-                    ${icon}
-                </span>
-                ${team.name} ${badge}
-            </td>
+        <span style="margin-right:5px;">
+            ${isQualified ? `<span class="qualify-badge">Q</span>` : ""}
+        </span>
+        <span class="${blinkClass}" style="color:${color}; font-weight:bold; margin-right:5px;">
+            ${icon}
+        </span>
+        ${team.name}
+    </td>
+`;
             <td>${played}</td>
             <td>${team.won}</td>
             <td>${team.lost}</td>
@@ -322,6 +326,7 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
 
