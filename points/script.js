@@ -119,7 +119,7 @@ let previousRanks = {
         </span>
         ${team.name}
     </td>
-`;
+
             <td>${played}</td>
             <td>${team.won}</td>
             <td>${team.lost}</td>
@@ -326,6 +326,7 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
 
