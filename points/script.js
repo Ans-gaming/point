@@ -107,7 +107,7 @@ let previousRanks = {
 
         // ⭐ Qualification badge only when ALL played 9 matches
         const isQualified = allPlayed && newIndex < 5;
-        const badge = isQualified ? `<span class="qualify-badge">QUALIFIED</span>` : "";
+        const badge = isQualified ? `<span class="qualify-badge">Q</span>` : "";
 
         row.innerHTML = `
             <td>
@@ -322,6 +322,7 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
 
