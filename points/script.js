@@ -238,20 +238,33 @@ let previousRanks = {
     // ------------------------------------------------------
 
     function populateTieBreakerTeams() {
-        const groupKey = document.getElementById("tieGroupSelect").value;
-        const names = groupData[groupKey].map(t => t.name);
+    const groupKey = document.getElementById("tieGroupSelect").value;
+    const teams = groupData[groupKey];
 
-        const t1 = document.getElementById("tieTeam1");
-        const t2 = document.getElementById("tieTeam2");
+    const t1 = document.getElementById("tieTeam1");
+    const t2 = document.getElementById("tieTeam2");
 
-        t1.innerHTML = '<option disabled selected>Select Team 1</option>';
-        t2.innerHTML = '<option disabled selected>Select Team 2</option>';
+    t1.innerHTML = '<option disabled selected>Select Team 1</option>';
+    t2.innerHTML = '<option disabled selected>Select Team 2</option>';
 
-        names.forEach(n => {
-            t1.appendChild(new Option(n, n));
-            t2.appendChild(new Option(n, n));
-        });
-    }
+    teams.forEach(team => {
+        const played = team.won + team.lost;
+
+        const opt1 = new Option(team.name, team.name);
+        const opt2 = new Option(team.name, team.name);
+
+        // ⭐ Disable if team completed 14 matches
+        if (played >= 14) {
+            opt1.disabled = true;
+            opt2.disabled = true;
+            opt1.style.color = "gray";
+            opt2.style.color = "gray";
+        }
+
+        t1.appendChild(opt1);
+        t2.appendChild(opt2);
+    });
+}
 
     // FINAL TIE BREAKER FUNCTION (PLAYED+1, LOST+1, -ROUNDS)
     function applyTieBreaker(groupKey, team1, team2, penalty) {
@@ -322,14 +335,3 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
-
-
-
-
-
-
-
-
-
-
-
