@@ -73,7 +73,7 @@ let previousRanks = {
     });
 
     // ⭐ Check if ALL teams played 9 matches
-    const allPlayed = teamData.every(t => (t.won + t.lost) === 9);
+    const allPlayed = teamData.every(t => (t.won + t.lost) === 14);
 
     tableBody.innerHTML = '';
 
@@ -147,7 +147,7 @@ let previousRanks = {
             const opt = new Option(team.name, team.name);
 
             // ⭐ If played 9 matches → disable option
-            if (played >= 9) {
+            if (played >= 14) {
                 opt.disabled = true;
                 opt.style.color = "gray";
             }
@@ -179,7 +179,7 @@ let previousRanks = {
         const opt = new Option(team.name, team.name);
 
         // ⭐ Disable team if it has completed 9 matches
-        if (played >= 9) {
+        if (played >= 14) {
             opt.disabled = true;
             opt.style.color = "gray";
         }
@@ -322,6 +322,7 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
 
