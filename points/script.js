@@ -5,28 +5,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. INITIAL DATA STORE
     let groupDataDefaults = {
         A: [
-            { name: "GAMING MACHA", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "ALIAN FF", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "DARK HUNTER", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "LOVEGURU GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "NIGHT HUNTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "SKY SHOOTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "VORTEX GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "VINAY GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "OTC", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "ANS GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "NIGHT HUNTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "AGENT 03", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "SMARTY BOY", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "THE LEGEND", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }  
+            { name: "THE SHIELD", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }  
         ],
         B: [
-            { name: "TEAM SOUL", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "OP ABHIRAM", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "BLACK 777", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "VIP GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "MRAK", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "RED MAX", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "STAY MAX", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "VINAY GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "DARK HUNTER", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "GAMER AADI", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "SKY SHOOTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
             { name: "BLUE DEVIL", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "OTC", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
+            { name: "THE LEGEND", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "DEATH GUN", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "MRAK", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ]
     };
 
@@ -326,6 +322,7 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
 
