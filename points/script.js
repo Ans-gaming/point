@@ -335,3 +335,4 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
