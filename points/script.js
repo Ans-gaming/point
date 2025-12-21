@@ -52,9 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(groupData));
     }
 let previousRanks = {
-    A: {},
-    B: {}
+    A: null,
+    B: null
 };
+
 let matchCount = {
     A: 0,
     B: 0
@@ -65,9 +66,10 @@ let matchCount = {
     const teamData = groupData[groupKey];
     const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
 
-    const oldOrder = [...teamData].map(t => t.name);
-    previousRanks[groupKey] = {};
-    oldOrder.forEach((name, index) => previousRanks[groupKey][name] = index);
+    const oldRanks = previousRanks[groupKey]
+    ? { ...previousRanks[groupKey] }
+    : null;
+
 
     // Sort normally
     teamData.sort((a, b) => {
@@ -75,6 +77,11 @@ let matchCount = {
             return b.totalPoints - a.totalPoints;
         return b.roundsPoints - a.roundsPoints;
     });
+
+    const newRanks = {};
+teamData.forEach((team, index) => {
+    newRanks[team.name] = index;
+});
 
     // ⭐ Check if ALL teams played 9 matches
     const allPlayed = teamData.every(t => (t.won + t.lost) === 14);
@@ -98,11 +105,11 @@ let color = "gray";
 let blinkClass = "";
 
 if (eligibleForArrow) {
-    if (oldIndex > newIndex) {
+    if (oldRanks && oldRanks[team.name] > newIndex) {
         icon = "▲";
         color = "green";
         blinkClass = "arrow-blink";
-    } else if (oldIndex < newIndex) {
+    } else if (oldRanks && oldRanks[team.name] < newIndex) {
         icon = "▼";
         color = "red";
         blinkClass = "arrow-blink";
@@ -351,5 +358,6 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
