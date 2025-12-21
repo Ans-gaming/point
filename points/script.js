@@ -55,6 +55,10 @@ let previousRanks = {
     A: {},
     B: {}
 };
+let matchCount = {
+    A: 0,
+    B: 0
+};
 
     // RENDER TABLE
   function renderTable(groupKey) {
@@ -80,19 +84,30 @@ let previousRanks = {
     teamData.forEach((team, newIndex) => {
         const oldIndex = previousRanks[groupKey][team.name];
 
-        let icon = "–";
-        let color = "gray";
-        let blinkClass = "";
+        // ⭐ determine current block of 3 matches
+const block = Math.floor((matchCount[groupKey] - 1) / 3);
+const blockStart = block * 3 + 1;
+const blockEnd = blockStart + 2;
 
-        if (oldIndex > newIndex) {
-            icon = "▲";
-            color = "green";
-            blinkClass = "arrow-blink";
-        } else if (oldIndex < newIndex) {
-            icon = "▼";
-            color = "red";
-            blinkClass = "arrow-blink";
-        }
+// team eligible only if it played in this block
+const played = team.won + team.lost;
+const eligibleForArrow = played >= blockStart && played <= blockEnd;
+
+let icon = "–";
+let color = "gray";
+let blinkClass = "";
+
+if (eligibleForArrow) {
+    if (oldIndex > newIndex) {
+        icon = "▲";
+        color = "green";
+        blinkClass = "arrow-blink";
+    } else if (oldIndex < newIndex) {
+        icon = "▼";
+        color = "red";
+        blinkClass = "arrow-blink";
+    }
+}
 
         const played = team.won + team.lost;
         const row = document.createElement('tr');
@@ -226,7 +241,8 @@ let previousRanks = {
         }
 
         calculateAndApplyScores(groupData[g], winner, loser, lostRounds);
-
+        matchCount[g]++;
+        
         saveData();
         renderTable(g);
         e.target.reset();
@@ -335,4 +351,5 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
