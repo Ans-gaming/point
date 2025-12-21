@@ -52,13 +52,8 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem(STORAGE_KEY, JSON.stringify(groupData));
     }
 let previousRanks = {
-    A: null,
-    B: null
-};
-
-let matchCount = {
-    A: 0,
-    B: 0
+    A: {},
+    B: {}
 };
 
     // RENDER TABLE
@@ -66,10 +61,9 @@ let matchCount = {
     const teamData = groupData[groupKey];
     const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
 
-    const oldRanks = previousRanks[groupKey]
-    ? { ...previousRanks[groupKey] }
-    : null;
-
+    const oldOrder = [...teamData].map(t => t.name);
+    previousRanks[groupKey] = {};
+    oldOrder.forEach((name, index) => previousRanks[groupKey][name] = index);
 
     // Sort normally
     teamData.sort((a, b) => {
@@ -77,11 +71,6 @@ let matchCount = {
             return b.totalPoints - a.totalPoints;
         return b.roundsPoints - a.roundsPoints;
     });
-
-    const newRanks = {};
-teamData.forEach((team, index) => {
-    newRanks[team.name] = index;
-});
 
     // ⭐ Check if ALL teams played 9 matches
     const allPlayed = teamData.every(t => (t.won + t.lost) === 14);
@@ -91,30 +80,19 @@ teamData.forEach((team, index) => {
     teamData.forEach((team, newIndex) => {
         const oldIndex = previousRanks[groupKey][team.name];
 
-        // ⭐ determine current block of 3 matches
-const block = Math.floor((matchCount[groupKey] - 1) / 3);
-const blockStart = block * 3 + 1;
-const blockEnd = blockStart + 2;
+        let icon = "–";
+        let color = "gray";
+        let blinkClass = "";
 
-// team eligible only if it played in this block
-const played = team.won + team.lost;
-const eligibleForArrow = played >= blockStart && played <= blockEnd;
-
-let icon = "–";
-let color = "gray";
-let blinkClass = "";
-
-if (eligibleForArrow) {
-    if (oldRanks && oldRanks[team.name] > newIndex) {
-        icon = "▲";
-        color = "green";
-        blinkClass = "arrow-blink";
-    } else if (oldRanks && oldRanks[team.name] < newIndex) {
-        icon = "▼";
-        color = "red";
-        blinkClass = "arrow-blink";
-    }
-}
+        if (oldIndex > newIndex) {
+            icon = "▲";
+            color = "green";
+            blinkClass = "arrow-blink";
+        } else if (oldIndex < newIndex) {
+            icon = "▼";
+            color = "red";
+            blinkClass = "arrow-blink";
+        }
 
         const played = team.won + team.lost;
         const row = document.createElement('tr');
@@ -151,7 +129,6 @@ if (eligibleForArrow) {
         }
 
         tableBody.appendChild(row);
-    previousRanks[groupKey] = newRanks;
     });
 }
   
@@ -249,8 +226,7 @@ if (eligibleForArrow) {
         }
 
         calculateAndApplyScores(groupData[g], winner, loser, lostRounds);
-        matchCount[g]++;
-        
+
         saveData();
         renderTable(g);
         e.target.reset();
@@ -359,7 +335,3 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
-
-
-
-
