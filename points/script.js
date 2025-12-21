@@ -151,6 +151,7 @@ if (eligibleForArrow) {
         }
 
         tableBody.appendChild(row);
+    previousRanks[groupKey] = newRanks;
     });
 }
   
@@ -358,6 +359,7 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
 
