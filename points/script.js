@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     const STORAGE_KEY = 'tournamentDataGroups';
-    let matchCount = { A: 0, B: 0 };
-    let recentMatches = { A: [], B: [] };
     
     // 1. INITIAL DATA STORE
     let groupDataDefaults = {
@@ -78,9 +76,6 @@ let previousRanks = {
     const allPlayed = teamData.every(t => (t.won + t.lost) === 14);
 
     tableBody.innerHTML = '';
-      
-    // ✅ All teams that have played any match so far
-    const involvedTeams = new Set(recentMatches[groupKey].flat());
 
     teamData.forEach((team, newIndex) => {
         const oldIndex = previousRanks[groupKey][team.name];
@@ -89,21 +84,14 @@ let previousRanks = {
         let color = "gray";
         let blinkClass = "";
 
-        const involvedTeams = recentMatches[groupKey].flat();
-
-        if (involvedTeams.includes(team.name)) {
-            if (oldIndex > newIndex) {
-                icon = "▲";
-                color = "green";
-                blinkClass = "arrow-blink";
-            } else if (oldIndex < newIndex) {
-                icon = "▼";
-                color = "red";
-                blinkClass = "arrow-blink";
-            }
-        } else {
-                icon = '–';
-                color = 'gray';
+        if (oldIndex > newIndex) {
+            icon = "▲";
+            color = "green";
+            blinkClass = "arrow-blink";
+        } else if (oldIndex < newIndex) {
+            icon = "▼";
+            color = "red";
+            blinkClass = "arrow-blink";
         }
 
         const played = team.won + team.lost;
@@ -226,45 +214,18 @@ let previousRanks = {
         const g = e.target.getAttribute("data-group");
         const winner = document.getElementById(`winningTeam${g}`).value;
         const loser = document.getElementById(`losingTeam${g}`).value;
-        const lostRoundsInput = document.getElementById(`lostRounds${g}`).value;
         const lostRounds = parseInt(document.getElementById(`lostRounds${g}`).value);
 
-        // Case 1: Winner selected but loser missing
-        if (winner && !loser) {
-            alert("Select a team name for the loser.");
+        if (!winner || !loser || winner === loser) {
+            alert("Select valid teams.");
             return;
         }
-        
-        // Case 2: Loser selected but winner missing
-        if (loser && !winner) {
-            alert("Select a team name for the winner.");
-            return;
-        }
-        
-        // Case 3: Both teams selected but rounds not entered
-        if (winner && loser && (!lostRoundsInput || isNaN(lostRounds))) {
-            alert("Enter a number between 1 to 7.");
-            return;
-        }
-        
-        // Case 4: Both teams selected but same team
-        if (winner === loser) {
-            alert("Winner and loser cannot be the same team.");
-            return;
-        }
-        
-        // Case 5: Lost rounds out of range
         if (lostRounds < 0 || lostRounds > 7) {
-            alert("Lost rounds must be between 0 and 7.");
+            alert("Lost rounds must be 0–7.");
             return;
         }
 
         calculateAndApplyScores(groupData[g], winner, loser, lostRounds);
-        // Track match count
-        matchCount[g] += 1;
-
-        // ✅ Always keep all matches until tournament ends
-        recentMatches[g].push([winner, loser]);
 
         saveData();
         renderTable(g);
@@ -374,6 +335,3 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
-
-
-
