@@ -5,24 +5,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. INITIAL DATA STORE
     let groupDataDefaults = {
         A: [
-            { name: "VORTEX GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "VINAY GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "OTC", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "ANS GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "NIGHT HUNTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "AGENT 03", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "SMARTY BOY", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "THE SHIELD", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }  
+            { name: "VORTEX GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "VINAY GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "OTC", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "ANS GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "NIGHT HUNTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "AGENT 03", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "SMARTY BOY", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "THE SHIELD", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" }  
         ],
         B: [
-            { name: "DARK HUNTER", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "GAMER AADI", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "SKY SHOOTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "BLUE DEVIL", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "THE LEGEND", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "DEATH GUN", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
-            { name: "MRAK", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
+            { name: "DARK HUNTER", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "GAMER AADI", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "SKY SHOOTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "BLUE DEVIL", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "THE LEGEND", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "DEATH GUN", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
+            { name: "MRAK", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" }
         ]
     };
 
@@ -384,4 +384,5 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
