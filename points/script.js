@@ -226,14 +226,36 @@ let previousRanks = {
         const g = e.target.getAttribute("data-group");
         const winner = document.getElementById(`winningTeam${g}`).value;
         const loser = document.getElementById(`losingTeam${g}`).value;
+        const lostRoundsInput = document.getElementById(`lostRounds${g}`).value;
         const lostRounds = parseInt(document.getElementById(`lostRounds${g}`).value);
 
-        if (!winner || !loser || winner === loser) {
-            alert("Select valid teams.");
+        // Case 1: Winner selected but loser missing
+        if (winner && !loser) {
+            alert("Select a team name for the loser.");
             return;
         }
+        
+        // Case 2: Loser selected but winner missing
+        if (loser && !winner) {
+            alert("Select a team name for the winner.");
+            return;
+        }
+        
+        // Case 3: Both teams selected but rounds not entered
+        if (winner && loser && (!lostRoundsInput || isNaN(lostRounds))) {
+            alert("Enter a number between 1 to 7.");
+            return;
+        }
+        
+        // Case 4: Both teams selected but same team
+        if (winner === loser) {
+            alert("Winner and loser cannot be the same team.");
+            return;
+        }
+        
+        // Case 5: Lost rounds out of range
         if (lostRounds < 0 || lostRounds > 7) {
-            alert("Lost rounds must be 0–7.");
+            alert("Lost rounds must be between 0 and 7.");
             return;
         }
 
@@ -352,5 +374,6 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
