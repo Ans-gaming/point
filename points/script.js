@@ -1,8 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     const STORAGE_KEY = 'tournamentDataGroups';
+    const LAST_MATCH_TEAMS_KEY = 'lastMatchTeams'; // Key to save the last played teams
     
-    // 1. INITIAL DATA STORE
+    // 1. INITIAL DATA STORE [cite: 1-5]
     let groupDataDefaults = {
         A: [
             { name: "VORTEX GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
@@ -27,26 +28,29 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let groupData;
-    let lastMatchTeams = { A: [], B: [] };
+    let lastPlayedTeams = { A: [], B: [] }; // Track teams for arrow logic
 
     // POINT RULES [cite: 6, 7]
-    const ROUNDS_MAPPING = { 
-        0: 10, 1: 9, 2: 8, 3: 7, 4: 6, 5: 5, 6: 4, 7: 3
-    };
+    const ROUNDS_MAPPING = { 0: 10, 1: 9, 2: 8, 3: 7, 4: 6, 5: 5, 6: 4, 7: 3 };
     const POINTS_PER_WIN = 4;
 
     function loadData() {
         const saved = localStorage.getItem(STORAGE_KEY);
+        const savedLastTeams = localStorage.getItem(LAST_MATCH_TEAMS_KEY);
         if (saved) {
-            groupData = JSON.parse(saved); [cite: 8]
+            groupData = JSON.parse(saved); [cite: 8, 9]
         } else {
-            groupData = groupDataDefaults; [cite: 9]
-            saveData(); [cite: 10]
+            groupData = groupDataDefaults; [cite: 10]
+            saveData();
+        }
+        if (savedLastTeams) {
+            lastPlayedTeams = JSON.parse(savedLastTeams);
         }
     }
 
     function saveData() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(groupData)); [cite: 11]
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(groupData)); [cite: 12]
+        localStorage.setItem(LAST_MATCH_TEAMS_KEY, JSON.stringify(lastPlayedTeams));
     }
 
     let previousRanks = { A: {}, B: {} };
@@ -56,21 +60,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const teamData = groupData[groupKey];
         const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
         
-        // Calculate total matches played to trigger arrow logic
-        const totalPlayedInGroup = teamData.reduce((sum, t) => sum + (t.won + t.lost), 0) / 2;
+        // Calculate total matches played in this group [cite: 16]
+        const totalMatchesInGroup = teamData.reduce((sum, team) => sum + (team.won + team.lost), 0) / 2;
 
         const oldOrder = [...teamData].map(t => t.name); [cite: 14]
         previousRanks[groupKey] = {};
         oldOrder.forEach((name, index) => previousRanks[groupKey][name] = index);
 
-        teamData.sort((a, b) => {
+        teamData.sort((a, b) => { [cite: 15]
             if (b.totalPoints !== a.totalPoints)
-                return b.totalPoints - a.totalPoints; [cite: 15]
+                return b.totalPoints - a.totalPoints;
             return b.roundsPoints - a.roundsPoints;
         });
 
         const allPlayed = teamData.every(t => (t.won + t.lost) === 14); [cite: 16]
-        tableBody.innerHTML = '';
+        tableBody.innerHTML = ''; [cite: 17]
 
         teamData.forEach((team, newIndex) => {
             const oldIndex = previousRanks[groupKey][team.name];
@@ -79,67 +83,73 @@ document.addEventListener('DOMContentLoaded', () => {
             let color = "gray";
             let blinkClass = "";
 
-            // NEW ARROW LOGIC
+            // --- NEW ARROW LOGIC ---
+            // 1. Show arrows for first 3 matches for everyone
+            // 2. After 3 matches, show arrows ONLY for teams involved in the last match
             let showArrow = false;
-            if (totalPlayedInGroup <= 3) {
+            if (totalMatchesInGroup <= 3) {
                 if (oldIndex !== newIndex) showArrow = true;
             } else {
-                if (oldIndex !== newIndex && lastMatchTeams[groupKey].includes(team.name)) {
+                if (oldIndex !== newIndex && lastPlayedTeams[groupKey].includes(team.name)) {
                     showArrow = true;
                 }
             }
 
             if (showArrow) {
                 if (oldIndex > newIndex) {
-                    icon = "▲"; [cite: 17]
-                    color = "green";
-                    blinkClass = "arrow-blink"; [cite: 18]
+                    icon = "▲"; color = "green"; blinkClass = "arrow-blink"; [cite: 18]
                 } else if (oldIndex < newIndex) {
-                    icon = "▼";
-                    color = "red";
-                    blinkClass = "arrow-blink";
+                    icon = "▼"; color = "red"; blinkClass = "arrow-blink"; [cite: 18]
                 }
             }
 
             const played = team.won + team.lost;
             const row = document.createElement('tr');
+
             row.style.transform = `translateY(${(oldIndex - newIndex) * 10}px)`; [cite: 19]
             setTimeout(() => row.style.transform = "translateY(0)", 20);
 
-            const isQualified = allPlayed && newIndex < 5; [cite: 19]
-            const badge = isQualified ? `<span class="qualify-badge">Q</span>` : ""; [cite: 19]
+            const isQualified = allPlayed && newIndex < 5; [cite: 20]
 
             row.innerHTML = `
                 <td>
-                    <span style="margin-right:5px;">${isQualified ? `<span class="qualify-badge">Q</span>` : ""}</span>
-                    <span class="${blinkClass}" style="color:${color}; font-weight:bold; margin-right:5px;">${icon}</span>
+                    <span style="margin-right:5px;">
+                        ${isQualified ? `<span class="qualify-badge">Q</span>` : ""} [cite: 21]
+                    </span>
+                    <span class="${blinkClass}" style="color:${color}; font-weight:bold; margin-right:5px;">
+                        ${icon}
+                    </span>
                     ${team.name}
                 </td>
-                <td>${played}</td> [cite: 21]
+                <td>${played}</td>
                 <td>${team.won}</td>
                 <td>${team.lost}</td>
                 <td>${team.roundsPoints}</td> [cite: 22]
                 <td>${team.totalPoints}</td>
             `;
 
-            if (isQualified) row.classList.add("qualified"); [cite: 23]
+            if (isQualified) {
+                row.classList.add("qualified"); [cite: 23, 24]
+            }
+
             tableBody.appendChild(row);
         });
     }
 
+    // POPULATE DROPDOWNS [cite: 25]
     function populateTeamSelects(groupKey) {
-        const winSel = document.getElementById(`winningTeam${groupKey}`); [cite: 25]
-        const loseSel = document.getElementById(`losingTeam${groupKey}`); [cite: 26]
+        const winSel = document.getElementById(`winningTeam${groupKey}`);
+        const loseSel = document.getElementById(`losingTeam${groupKey}`);
         const teams = groupData[groupKey];
 
         const setDropdown = (select, placeholder) => {
             select.innerHTML = `<option disabled selected>${placeholder}</option>`;
-            teams.forEach(team => {
+            teams.forEach(team => { [cite: 27]
                 const played = team.won + team.lost;
                 const opt = new Option(team.name, team.name);
-                if (played >= 14) { [cite: 27]
-                    opt.disabled = true;
-                    opt.style.color = "gray"; [cite: 28]
+                if (played >= 14) {
+                    opt.disabled = true; [cite: 28]
+                    opt.style.color = "gray";
                 }
                 select.appendChild(opt);
             });
@@ -151,17 +161,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function filterLoserSelect(groupKey) {
-        const winSel = document.getElementById(`winningTeam${groupKey}`); [cite: 29]
-        const loseSel = document.getElementById(`losingTeam${groupKey}`); [cite: 30]
+        const winSel = document.getElementById(`winningTeam${groupKey}`);
+        const loseSel = document.getElementById(`losingTeam${groupKey}`);
         const teams = groupData[groupKey];
-
-        loseSel.innerHTML = '<option disabled selected>Select Loser</option>';
-        teams.forEach(team => {
-            if (team.name === winSel.value) return; [cite: 31]
+        loseSel.innerHTML = '<option disabled selected>Select Loser</option>'; [cite: 30]
+        teams.forEach(team => { [cite: 31]
+            if (team.name === winSel.value) return;
             const played = team.won + team.lost;
             const opt = new Option(team.name, team.name);
-            if (played >= 14) { [cite: 32]
-                opt.disabled = true;
+            if (played >= 14) {
+                opt.disabled = true; [cite: 32]
                 opt.style.color = "gray";
             }
             loseSel.appendChild(opt);
@@ -169,60 +178,56 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function calculateAndApplyScores(arr, winnerName, loserName, lostRounds) {
-        const winner = arr.find(t => t.name === winnerName); [cite: 33]
-        const loser = arr.find(t => t.name === loserName); [cite: 34]
+        const winner = arr.find(t => t.name === winnerName); [cite: 34]
+        const loser = arr.find(t => t.name === loserName);
         const roundPts = ROUNDS_MAPPING[lostRounds] || 0;
-
         winner.won += 1;
         winner.roundsPoints += roundPts;
         winner.totalPoints = winner.won * POINTS_PER_WIN; [cite: 35]
-
         loser.lost += 1;
         loser.roundsPoints -= roundPts;
-        loser.totalPoints = loser.won * POINTS_PER_WIN;
+        loser.totalPoints = loser.won * POINTS_PER_WIN; [cite: 36]
     }
 
     function handleFormSubmit(e) {
         e.preventDefault();
-        const g = e.target.getAttribute("data-group"); [cite: 37]
+        const g = e.target.getAttribute("data-group");
         const winner = document.getElementById(`winningTeam${g}`).value;
-        const loser = document.getElementById(`losingTeam${g}`).value; [cite: 38]
+        const loser = document.getElementById(`losingTeam${g}`).value;
         const lostRounds = parseInt(document.getElementById(`lostRounds${g}`).value);
 
         if (!winner || !loser || winner === loser) {
-            alert("Select valid teams."); [cite: 39]
+            alert("Select valid teams."); [cite: 38, 39]
             return;
         }
 
-        lastMatchTeams[g] = [winner, loser];
+        // Track teams in the current match for arrow logic
+        lastPlayedTeams[g] = [winner, loser];
 
-        calculateAndApplyScores(groupData[g], winner, loser, lostRounds); [cite: 40]
+        calculateAndApplyScores(groupData[g], winner, loser, lostRounds);
         saveData();
         renderTable(g);
         e.target.reset();
-        populateTeamSelects(g);
+        populateTeamSelects(g); [cite: 41]
     }
 
     document.getElementById('matchFormA').addEventListener('submit', handleFormSubmit); [cite: 36]
     document.getElementById('matchFormB').addEventListener('submit', handleFormSubmit);
 
-    // RESTORED TIE BREAKER SYSTEM [cite: 41]
+    // TIE BREAKER SYSTEM [cite: 41]
     function populateTieBreakerTeams() {
         const groupKey = document.getElementById("tieGroupSelect").value;
-        const teams = groupData[groupKey]; [cite: 42]
+        const teams = groupData[groupKey];
         const t1 = document.getElementById("tieTeam1");
         const t2 = document.getElementById("tieTeam2");
-
-        t1.innerHTML = '<option disabled selected>Select Team 1</option>'; [cite: 43]
+        t1.innerHTML = '<option disabled selected>Select Team 1</option>'; [cite: 42, 43]
         t2.innerHTML = '<option disabled selected>Select Team 2</option>';
-
         teams.forEach(team => {
             const played = team.won + team.lost;
             const opt1 = new Option(team.name, team.name);
             const opt2 = new Option(team.name, team.name);
-
-            if (played >= 14) { [cite: 44]
-                opt1.disabled = true;
+            if (played >= 14) {
+                opt1.disabled = true; [cite: 44]
                 opt2.disabled = true;
                 opt1.style.color = "gray";
                 opt2.style.color = "gray";
@@ -233,11 +238,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function applyTieBreaker(groupKey, team1, team2, penalty) {
-        const arr = groupData[groupKey]; [cite: 45]
+        const arr = groupData[groupKey];
         const t1 = arr.find(t => t.name === team1); [cite: 46]
-        const t2 = arr.find(t => t.name === team2); [cite: 47]
+        const t2 = arr.find(t => t.name === team2);
+        if (!t1 || !t2) return; [cite: 47]
 
-        if (!t1 || !t2) return;
+        // Track tie breaker teams for arrows
+        lastPlayedTeams[groupKey] = [team1, team2];
 
         t1.roundsPoints -= penalty; [cite: 48]
         t2.roundsPoints -= penalty;
@@ -248,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         saveData();
         renderTable(groupKey);
-        alert(`Tie Breaker Applied!\n${team1}: -${penalty}\n${team2}: -${penalty}`);
+        alert(`Tie Breaker Applied!\n${team1}: -${penalty}\n${team2}: -${penalty}`); [cite: 50]
     }
 
     document.getElementById("tieGroupSelect").addEventListener("change", populateTieBreakerTeams); [cite: 51]
@@ -257,7 +264,6 @@ document.addEventListener('DOMContentLoaded', () => {
         const t1 = document.getElementById("tieTeam1").value;
         const t2 = document.getElementById("tieTeam2").value;
         const penalty = parseInt(document.getElementById("tiePenalty").value);
-
         if (!t1 || !t2) {
             alert("Select both teams.");
             return;
@@ -266,11 +272,11 @@ document.addEventListener('DOMContentLoaded', () => {
             alert("Teams cannot be the same.");
             return;
         }
-
         applyTieBreaker(groupKey, t1, t2, penalty);
     });
 
-    loadData(); [cite: 53]
+    // INITIAL LOAD [cite: 53]
+    loadData();
     populateTeamSelects("A");
     populateTeamSelects("B");
     renderTable("A");
@@ -283,7 +289,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
 document.getElementById("resetDataBtn").addEventListener("click", () => {
     if (confirm("Are you sure? This will clear all tournament data.")) {
-        localStorage.removeItem('tournamentDataGroups'); [cite: 54]
+        localStorage.removeItem('tournamentDataGroups');
+        localStorage.removeItem('lastMatchTeams');
+        alert("Data cleared! Page will reload.");
         location.reload();
     }
 });
