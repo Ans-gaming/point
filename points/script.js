@@ -5,24 +5,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. INITIAL DATA STORE
     let groupDataDefaults = {
         A: [
-            { name: "VORTEX GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "VINAY GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "OTC", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "ANS GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "NIGHT HUNTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "AGENT 03", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "SMARTY BOY", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "THE SHIELD", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" }  
+            { name: "VORTEX GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "VINAY GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "OTC", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "ANS GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "NIGHT HUNTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "AGENT 03", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "SMARTY BOY", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "THE SHIELD", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }  
         ],
         B: [
-            { name: "DARK HUNTER", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "GAMER AADI", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "SKY SHOOTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "BLUE DEVIL", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "THE LEGEND", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "DEATH GUN", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" },
-            { name: "MRAK", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, movement: "-" }
+            { name: "DARK HUNTER", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "GAMER AADI", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "SKY SHOOTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "BLUE DEVIL", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "THE LEGEND", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "DEATH GUN", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "MRAK", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ]
     };
 
@@ -61,28 +61,9 @@ let previousRanks = {
     const teamData = groupData[groupKey];
     const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
 
-    const savePos = {};
-    teams.forEach((team, i) => savePos[team.name] = i + 1);
-    localStorage.setItem(`prevPos_${groupKey}`, JSON.stringify(savePos));
-}
-function updateMovements(groupKey) {
-    const prevPos = JSON.parse(localStorage.getItem(`prevPos_${groupKey}`)) || {};
-    const teams = groupData[groupKey];
-
-    teams.forEach((team, index) => {
-        const newPos = index + 1;
-        const oldPos = prevPos[team.name];
-
-        if (oldPos === undefined) {
-            team.movement = "-";
-        } else if (newPos < oldPos) {
-            team.movement = "up";
-        } else if (newPos > oldPos) {
-            team.movement = "down";
-        } else {
-            team.movement = "-";
-        }
-    });
+    const oldOrder = [...teamData].map(t => t.name);
+    previousRanks[groupKey] = {};
+    oldOrder.forEach((name, index) => previousRanks[groupKey][name] = index);
 
     // Sort normally
     teamData.sort((a, b) => {
@@ -91,7 +72,6 @@ function updateMovements(groupKey) {
         return b.roundsPoints - a.roundsPoints;
     });
 
-      updateMovements(groupKey);
     // ⭐ Check if ALL teams played 9 matches
     const allPlayed = teamData.every(t => (t.won + t.lost) === 14);
 
@@ -104,15 +84,15 @@ function updateMovements(groupKey) {
         let color = "gray";
         let blinkClass = "";
 
-        if (team.movement === "up") {
-    icon = "▲";
-    color = "green";
-    blinkClass = "arrow-blink";
-} else if (team.movement === "down") {
-    icon = "▼";
-    color = "red";
-    blinkClass = "arrow-blink";
-}
+        if (oldIndex > newIndex) {
+            icon = "▲";
+            color = "green";
+            blinkClass = "arrow-blink";
+        } else if (oldIndex < newIndex) {
+            icon = "▼";
+            color = "red";
+            blinkClass = "arrow-blink";
+        }
 
         const played = team.won + team.lost;
         const row = document.createElement('tr');
@@ -150,11 +130,6 @@ function updateMovements(groupKey) {
 
         tableBody.appendChild(row);
     });
-      previousRanks[groupKey] = {};
-teamData.forEach((team, index) => {
-    previousRanks[groupKey][team.name] = index;
-});
-
 }
   
     // POPULATE DROPDOWNS
@@ -409,9 +384,3 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
-
-
-
-
-
-
