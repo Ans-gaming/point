@@ -57,7 +57,7 @@ let previousRanks = {
 };
 
     // RENDER TABLE
-  function renderTable(groupKey, isMatchUpdate = false) {
+  function renderTable(groupKey) {
     const teamData = groupData[groupKey];
     const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
 
@@ -83,19 +83,17 @@ let previousRanks = {
         let icon = "–";
         let color = "gray";
         let blinkClass = "";
-        if (isMatchUpdate) {
-            const oldIndex = oldOrder.indexOf(team.name);
 
-            if (oldIndex > newIndex) {
-              icon = "▲";
-              color = "green";
-              blinkClass = "arrow-blink";
-           } else if (oldIndex < newIndex) {
-              icon = "▼";
-              color = "red";
-              blinkClass = "arrow-blink";
-           }
+        if (oldIndex > newIndex) {
+            icon = "▲";
+            color = "green";
+            blinkClass = "arrow-blink";
+        } else if (oldIndex < newIndex) {
+            icon = "▼";
+            color = "red";
+            blinkClass = "arrow-blink";
         }
+
         const played = team.won + team.lost;
         const row = document.createElement('tr');
 
@@ -386,4 +384,3 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
-
