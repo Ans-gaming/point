@@ -1,6 +1,8 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     const STORAGE_KEY = 'tournamentDataGroups';
+    let matchCount = { A: 0, B: 0 };
+    let recentMatches = { A: [], B: [] };
     
     // 1. INITIAL DATA STORE
     let groupDataDefaults = {
@@ -84,14 +86,28 @@ let previousRanks = {
         let color = "gray";
         let blinkClass = "";
 
-        if (oldIndex > newIndex) {
-            icon = "▲";
-            color = "green";
-            blinkClass = "arrow-blink";
-        } else if (oldIndex < newIndex) {
-            icon = "▼";
-            color = "red";
-            blinkClass = "arrow-blink";
+        const involvedTeams = recentMatches[groupKey].flat();
+
+        if (involvedTeams.includes(team.name)) {
+            if (oldIndex > newIndex) {
+                icon = "▲";
+                color = "green";
+                blinkClass = "arrow-blink";
+            } else if (oldIndex < newIndex) {
+                icon = "▼";
+                color = "red";
+                blinkClass = "arrow-blink";
+            }
+        } else {
+            // After 4th match → pair arrows logic
+            if (matchCount[groupKey] >= 4) {
+                // Example: pair arrows 1↔3, 4↔6
+                const index = newIndex + 1; // 1-based
+                if (index === 1 || index === 3 || index === 4 || index === 6) {
+                    icon = "↔"; // or ▲/▼ depending on your design
+                    color = "blue";
+                }
+            }
         }
 
         const played = team.won + team.lost;
@@ -226,6 +242,18 @@ let previousRanks = {
         }
 
         calculateAndApplyScores(groupData[g], winner, loser, lostRounds);
+        // Track match count
+        matchCount[g] += 1;
+        
+        // Save recent matches (keep last 3 or 1 depending on count)
+        recentMatches[g].push([winner, loser]);
+        if (matchCount[g] <= 3) {
+            // keep last 3
+            if (recentMatches[g].length > 3) recentMatches[g].shift();
+        } else {
+            // after 4th → only keep last match
+            recentMatches[g] = [[winner, loser]];
+        }
 
         saveData();
         renderTable(g);
@@ -335,3 +363,4 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
