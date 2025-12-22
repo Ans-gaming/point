@@ -61,9 +61,30 @@ let previousRanks = {
     const teamData = groupData[groupKey];
     const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
 
-    const oldOrder = [...teamData].map(t => t.name);
-    previousRanks[groupKey] = {};
-    oldOrder.forEach((name, index) => previousRanks[groupKey][name] = index);
+    function updateMovements(groupKey) {
+    const prevPos = JSON.parse(localStorage.getItem(`prevPos_${groupKey}`)) || {};
+    const teams = groupData[groupKey];
+
+    teams.forEach((team, index) => {
+        const newPos = index + 1;
+        const oldPos = prevPos[team.name];
+
+        if (oldPos === undefined) {
+            team.movement = "-";
+        } else if (newPos < oldPos) {
+            team.movement = "up";
+        } else if (newPos > oldPos) {
+            team.movement = "down";
+        } else {
+            team.movement = "-";
+        }
+    });
+
+    const savePos = {};
+    teams.forEach((team, i) => savePos[team.name] = i + 1);
+    localStorage.setItem(`prevPos_${groupKey}`, JSON.stringify(savePos));
+}
+
 
     // Sort normally
     teamData.sort((a, b) => {
@@ -84,15 +105,15 @@ let previousRanks = {
         let color = "gray";
         let blinkClass = "";
 
-        if (oldIndex > newIndex) {
-            icon = "▲";
-            color = "green";
-            blinkClass = "arrow-blink";
-        } else if (oldIndex < newIndex) {
-            icon = "▼";
-            color = "red";
-            blinkClass = "arrow-blink";
-        }
+        if (team.movement === "up") {
+    icon = "▲";
+    color = "green";
+    blinkClass = "arrow-blink";
+} else if (team.movement === "down") {
+    icon = "▼";
+    color = "red";
+    blinkClass = "arrow-blink";
+}
 
         const played = team.won + team.lost;
         const row = document.createElement('tr');
@@ -130,6 +151,8 @@ let previousRanks = {
 
         tableBody.appendChild(row);
     });
+      updateMovements(groupKey);
+
 }
   
     // POPULATE DROPDOWNS
@@ -397,6 +420,7 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
 
