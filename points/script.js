@@ -377,6 +377,19 @@ let previousRanks = {
 
 });
 
+function getPreviousPositions(groupKey) {
+    const data = JSON.parse(localStorage.getItem(`prevPos_${groupKey}`)) || {};
+    return data;
+}
+
+function savePreviousPositions(groupKey, teams) {
+    const pos = {};
+    teams.forEach((team, index) => {
+        pos[team.name] = index + 1;
+    });
+    localStorage.setItem(`prevPos_${groupKey}`, JSON.stringify(pos));
+}
+
 document.getElementById("resetDataBtn").addEventListener("click", () => {
     if (confirm("Are you sure? This will clear all tournament data.")) {
         localStorage.removeItem('tournamentDataGroups');
@@ -384,5 +397,6 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
