@@ -27,276 +27,232 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     let groupData;
+    let lastMatchTeams = { A: [], B: [] };
 
-    // POINT RULES
+    // POINT RULES [cite: 6, 7]
     const ROUNDS_MAPPING = { 
         0: 10, 1: 9, 2: 8, 3: 7, 4: 6, 5: 5, 6: 4, 7: 3
     };
     const POINTS_PER_WIN = 4;
 
-    // -----------------------------------------
-    // ✅ FIXED loadData (no more deleting data)
-    // -----------------------------------------
     function loadData() {
         const saved = localStorage.getItem(STORAGE_KEY);
-        
         if (saved) {
-            groupData = JSON.parse(saved);  // load saved data
+            groupData = JSON.parse(saved); [cite: 8]
         } else {
-            groupData = groupDataDefaults;  // first time only
-            saveData();
+            groupData = groupDataDefaults; [cite: 9]
+            saveData(); [cite: 10]
         }
     }
 
     function saveData() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(groupData));
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(groupData)); [cite: 11]
     }
-let previousRanks = {
-    A: {},
-    B: {}
-};
 
-    // RENDER TABLE
-  function renderTable(groupKey) {
-    const teamData = groupData[groupKey];
-    const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
+    let previousRanks = { A: {}, B: {} };
 
-    const oldOrder = [...teamData].map(t => t.name);
-    previousRanks[groupKey] = {};
-    oldOrder.forEach((name, index) => previousRanks[groupKey][name] = index);
+    // RENDER TABLE [cite: 13]
+    function renderTable(groupKey) {
+        const teamData = groupData[groupKey];
+        const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
+        
+        // Calculate total matches played to trigger arrow logic
+        const totalPlayedInGroup = teamData.reduce((sum, t) => sum + (t.won + t.lost), 0) / 2;
 
-    // Sort normally
-    teamData.sort((a, b) => {
-        if (b.totalPoints !== a.totalPoints)
-            return b.totalPoints - a.totalPoints;
-        return b.roundsPoints - a.roundsPoints;
-    });
+        const oldOrder = [...teamData].map(t => t.name); [cite: 14]
+        previousRanks[groupKey] = {};
+        oldOrder.forEach((name, index) => previousRanks[groupKey][name] = index);
 
-    // ⭐ Check if ALL teams played 9 matches
-    const allPlayed = teamData.every(t => (t.won + t.lost) === 14);
+        teamData.sort((a, b) => {
+            if (b.totalPoints !== a.totalPoints)
+                return b.totalPoints - a.totalPoints; [cite: 15]
+            return b.roundsPoints - a.roundsPoints;
+        });
 
-    tableBody.innerHTML = '';
+        const allPlayed = teamData.every(t => (t.won + t.lost) === 14); [cite: 16]
+        tableBody.innerHTML = '';
 
-    teamData.forEach((team, newIndex) => {
-        const oldIndex = previousRanks[groupKey][team.name];
+        teamData.forEach((team, newIndex) => {
+            const oldIndex = previousRanks[groupKey][team.name];
 
-        let icon = "–";
-        let color = "gray";
-        let blinkClass = "";
+            let icon = "–";
+            let color = "gray";
+            let blinkClass = "";
 
-        if (oldIndex > newIndex) {
-            icon = "▲";
-            color = "green";
-            blinkClass = "arrow-blink";
-        } else if (oldIndex < newIndex) {
-            icon = "▼";
-            color = "red";
-            blinkClass = "arrow-blink";
-        }
+            // NEW ARROW LOGIC
+            let showArrow = false;
+            if (totalPlayedInGroup <= 3) {
+                if (oldIndex !== newIndex) showArrow = true;
+            } else {
+                if (oldIndex !== newIndex && lastMatchTeams[groupKey].includes(team.name)) {
+                    showArrow = true;
+                }
+            }
 
-        const played = team.won + team.lost;
-        const row = document.createElement('tr');
+            if (showArrow) {
+                if (oldIndex > newIndex) {
+                    icon = "▲"; [cite: 17]
+                    color = "green";
+                    blinkClass = "arrow-blink"; [cite: 18]
+                } else if (oldIndex < newIndex) {
+                    icon = "▼";
+                    color = "red";
+                    blinkClass = "arrow-blink";
+                }
+            }
 
-        // ⭐ Smooth slide animation
-        row.style.transform = `translateY(${(oldIndex - newIndex) * 10}px)`;
-        setTimeout(() => row.style.transform = "translateY(0)", 20);
+            const played = team.won + team.lost;
+            const row = document.createElement('tr');
+            row.style.transform = `translateY(${(oldIndex - newIndex) * 10}px)`; [cite: 19]
+            setTimeout(() => row.style.transform = "translateY(0)", 20);
 
-        // ⭐ Qualification badge only when ALL played 9 matches
-        const isQualified = allPlayed && newIndex < 5;
-        const badge = isQualified ? `<span class="qualify-badge">Q</span>` : "";
+            const isQualified = allPlayed && newIndex < 5; [cite: 19]
+            const badge = isQualified ? `<span class="qualify-badge">Q</span>` : ""; [cite: 19]
 
-        row.innerHTML = `
-            <td>
-        <span style="margin-right:5px;">
-            ${isQualified ? `<span class="qualify-badge">Q</span>` : ""}
-        </span>
-        <span class="${blinkClass}" style="color:${color}; font-weight:bold; margin-right:5px;">
-            ${icon}
-        </span>
-        ${team.name}
-    </td>
+            row.innerHTML = `
+                <td>
+                    <span style="margin-right:5px;">${isQualified ? `<span class="qualify-badge">Q</span>` : ""}</span>
+                    <span class="${blinkClass}" style="color:${color}; font-weight:bold; margin-right:5px;">${icon}</span>
+                    ${team.name}
+                </td>
+                <td>${played}</td> [cite: 21]
+                <td>${team.won}</td>
+                <td>${team.lost}</td>
+                <td>${team.roundsPoints}</td> [cite: 22]
+                <td>${team.totalPoints}</td>
+            `;
 
-            <td>${played}</td>
-            <td>${team.won}</td>
-            <td>${team.lost}</td>
-            <td>${team.roundsPoints}</td>
-            <td>${team.totalPoints}</td>
-        `;
+            if (isQualified) row.classList.add("qualified"); [cite: 23]
+            tableBody.appendChild(row);
+        });
+    }
 
-        // ⭐ Add highlight class AFTER all teams complete 9 matches
-        if (isQualified) {
-            row.classList.add("qualified");
-        }
+    function populateTeamSelects(groupKey) {
+        const winSel = document.getElementById(`winningTeam${groupKey}`); [cite: 25]
+        const loseSel = document.getElementById(`losingTeam${groupKey}`); [cite: 26]
+        const teams = groupData[groupKey];
 
-        tableBody.appendChild(row);
-    });
-}
-  
-    // POPULATE DROPDOWNS
- function populateTeamSelects(groupKey) {
-    const winSel = document.getElementById(`winningTeam${groupKey}`);
-    const loseSel = document.getElementById(`losingTeam${groupKey}`);
-    const teams = groupData[groupKey];
+        const setDropdown = (select, placeholder) => {
+            select.innerHTML = `<option disabled selected>${placeholder}</option>`;
+            teams.forEach(team => {
+                const played = team.won + team.lost;
+                const opt = new Option(team.name, team.name);
+                if (played >= 14) { [cite: 27]
+                    opt.disabled = true;
+                    opt.style.color = "gray"; [cite: 28]
+                }
+                select.appendChild(opt);
+            });
+        };
 
-    // Helper to fill dropdowns
-    const setDropdown = (select, placeholder) => {
-        select.innerHTML = `<option disabled selected>${placeholder}</option>`;
+        setDropdown(winSel, "Select Winner");
+        setDropdown(loseSel, "Select Loser");
+        filterLoserSelect(groupKey);
+    }
 
+    function filterLoserSelect(groupKey) {
+        const winSel = document.getElementById(`winningTeam${groupKey}`); [cite: 29]
+        const loseSel = document.getElementById(`losingTeam${groupKey}`); [cite: 30]
+        const teams = groupData[groupKey];
+
+        loseSel.innerHTML = '<option disabled selected>Select Loser</option>';
         teams.forEach(team => {
+            if (team.name === winSel.value) return; [cite: 31]
             const played = team.won + team.lost;
             const opt = new Option(team.name, team.name);
-
-            // ⭐ If played 9 matches → disable option
-            if (played >= 14) {
+            if (played >= 14) { [cite: 32]
                 opt.disabled = true;
                 opt.style.color = "gray";
             }
-
-            select.appendChild(opt);
+            loseSel.appendChild(opt);
         });
-    };
+    }
 
-    setDropdown(winSel, "Select Winner");
-    setDropdown(loseSel, "Select Loser");
-
-    filterLoserSelect(groupKey);
-}
-
-    // FILTER LOSER OPTIONS
-    function filterLoserSelect(groupKey) {
-    const winSel = document.getElementById(`winningTeam${groupKey}`);
-    const loseSel = document.getElementById(`losingTeam${groupKey}`);
-    const teams = groupData[groupKey];
-
-    loseSel.innerHTML = '<option disabled selected>Select Loser</option>';
-
-    teams.forEach(team => {
-        const played = team.won + team.lost;
-
-        // Skip winner team
-        if (team.name === winSel.value) return;
-
-        const opt = new Option(team.name, team.name);
-
-        // ⭐ Disable team if it has completed 9 matches
-        if (played >= 14) {
-            opt.disabled = true;
-            opt.style.color = "gray";
-        }
-
-        loseSel.appendChild(opt);
-    });
-}
-
-    // APPLY MATCH RESULTS
     function calculateAndApplyScores(arr, winnerName, loserName, lostRounds) {
-        const winner = arr.find(t => t.name === winnerName);
-        const loser = arr.find(t => t.name === loserName);
-
+        const winner = arr.find(t => t.name === winnerName); [cite: 33]
+        const loser = arr.find(t => t.name === loserName); [cite: 34]
         const roundPts = ROUNDS_MAPPING[lostRounds] || 0;
 
         winner.won += 1;
         winner.roundsPoints += roundPts;
-        winner.totalPoints = winner.won * POINTS_PER_WIN;
+        winner.totalPoints = winner.won * POINTS_PER_WIN; [cite: 35]
 
         loser.lost += 1;
         loser.roundsPoints -= roundPts;
         loser.totalPoints = loser.won * POINTS_PER_WIN;
     }
 
-    // FORM SUBMISSION
-    document.getElementById('matchFormA').addEventListener('submit', handleFormSubmit);
-    document.getElementById('matchFormB').addEventListener('submit', handleFormSubmit);
-
     function handleFormSubmit(e) {
         e.preventDefault();
-
-        const g = e.target.getAttribute("data-group");
+        const g = e.target.getAttribute("data-group"); [cite: 37]
         const winner = document.getElementById(`winningTeam${g}`).value;
-        const loser = document.getElementById(`losingTeam${g}`).value;
+        const loser = document.getElementById(`losingTeam${g}`).value; [cite: 38]
         const lostRounds = parseInt(document.getElementById(`lostRounds${g}`).value);
 
         if (!winner || !loser || winner === loser) {
-            alert("Select valid teams.");
-            return;
-        }
-        if (lostRounds < 0 || lostRounds > 7) {
-            alert("Lost rounds must be 0–7.");
+            alert("Select valid teams."); [cite: 39]
             return;
         }
 
-        calculateAndApplyScores(groupData[g], winner, loser, lostRounds);
+        lastMatchTeams[g] = [winner, loser];
 
+        calculateAndApplyScores(groupData[g], winner, loser, lostRounds); [cite: 40]
         saveData();
         renderTable(g);
         e.target.reset();
         populateTeamSelects(g);
     }
 
-    // ------------------------------------------------------
-    // ⭐⭐⭐ TIE BREAKER SYSTEM ⭐⭐⭐
-    // ------------------------------------------------------
+    document.getElementById('matchFormA').addEventListener('submit', handleFormSubmit); [cite: 36]
+    document.getElementById('matchFormB').addEventListener('submit', handleFormSubmit);
 
+    // RESTORED TIE BREAKER SYSTEM [cite: 41]
     function populateTieBreakerTeams() {
-    const groupKey = document.getElementById("tieGroupSelect").value;
-    const teams = groupData[groupKey];
+        const groupKey = document.getElementById("tieGroupSelect").value;
+        const teams = groupData[groupKey]; [cite: 42]
+        const t1 = document.getElementById("tieTeam1");
+        const t2 = document.getElementById("tieTeam2");
 
-    const t1 = document.getElementById("tieTeam1");
-    const t2 = document.getElementById("tieTeam2");
+        t1.innerHTML = '<option disabled selected>Select Team 1</option>'; [cite: 43]
+        t2.innerHTML = '<option disabled selected>Select Team 2</option>';
 
-    t1.innerHTML = '<option disabled selected>Select Team 1</option>';
-    t2.innerHTML = '<option disabled selected>Select Team 2</option>';
+        teams.forEach(team => {
+            const played = team.won + team.lost;
+            const opt1 = new Option(team.name, team.name);
+            const opt2 = new Option(team.name, team.name);
 
-    teams.forEach(team => {
-        const played = team.won + team.lost;
+            if (played >= 14) { [cite: 44]
+                opt1.disabled = true;
+                opt2.disabled = true;
+                opt1.style.color = "gray";
+                opt2.style.color = "gray";
+            }
+            t1.appendChild(opt1);
+            t2.appendChild(opt2);
+        });
+    }
 
-        const opt1 = new Option(team.name, team.name);
-        const opt2 = new Option(team.name, team.name);
-
-        // ⭐ Disable if team completed 14 matches
-        if (played >= 14) {
-            opt1.disabled = true;
-            opt2.disabled = true;
-            opt1.style.color = "gray";
-            opt2.style.color = "gray";
-        }
-
-        t1.appendChild(opt1);
-        t2.appendChild(opt2);
-    });
-}
-
-    // FINAL TIE BREAKER FUNCTION (PLAYED+1, LOST+1, -ROUNDS)
     function applyTieBreaker(groupKey, team1, team2, penalty) {
-
-        const arr = groupData[groupKey];
-        const t1 = arr.find(t => t.name === team1);
-        const t2 = arr.find(t => t.name === team2);
+        const arr = groupData[groupKey]; [cite: 45]
+        const t1 = arr.find(t => t.name === team1); [cite: 46]
+        const t2 = arr.find(t => t.name === team2); [cite: 47]
 
         if (!t1 || !t2) return;
 
-        // Deduct round points
-        t1.roundsPoints -= penalty;
+        t1.roundsPoints -= penalty; [cite: 48]
         t2.roundsPoints -= penalty;
-
-        // Played +1 because Lost +1
-        t1.lost += 1;
+        t1.lost += 1; [cite: 49]
         t2.lost += 1;
-
-        // Total points unchanged
-        t1.totalPoints = t1.won * 4;
+        t1.totalPoints = t1.won * 4; [cite: 50]
         t2.totalPoints = t2.won * 4;
 
         saveData();
         renderTable(groupKey);
-
         alert(`Tie Breaker Applied!\n${team1}: -${penalty}\n${team2}: -${penalty}`);
     }
 
-    document.getElementById("tieGroupSelect").addEventListener("change", populateTieBreakerTeams);
-
+    document.getElementById("tieGroupSelect").addEventListener("change", populateTieBreakerTeams); [cite: 51]
     document.getElementById("tieApplyBtn").addEventListener("click", () => {
-
         const groupKey = document.getElementById("tieGroupSelect").value;
         const t1 = document.getElementById("tieTeam1").value;
         const t2 = document.getElementById("tieTeam2").value;
@@ -306,7 +262,7 @@ let previousRanks = {
             alert("Select both teams.");
             return;
         }
-        if (t1 === t2) {
+        if (t1 === t2) { [cite: 52]
             alert("Teams cannot be the same.");
             return;
         }
@@ -314,24 +270,20 @@ let previousRanks = {
         applyTieBreaker(groupKey, t1, t2, penalty);
     });
 
-    // INITIAL LOAD
-    loadData();
+    loadData(); [cite: 53]
     populateTeamSelects("A");
     populateTeamSelects("B");
     renderTable("A");
     renderTable("B");
-
     populateTieBreakerTeams();
 
-    document.getElementById("winningTeamA").addEventListener("change", () => filterLoserSelect("A"));
+    document.getElementById("winningTeamA").addEventListener("change", () => filterLoserSelect("A")); [cite: 54]
     document.getElementById("winningTeamB").addEventListener("change", () => filterLoserSelect("B"));
-
 });
 
 document.getElementById("resetDataBtn").addEventListener("click", () => {
     if (confirm("Are you sure? This will clear all tournament data.")) {
-        localStorage.removeItem('tournamentDataGroups');
-        alert("Data cleared! Page will reload.");
+        localStorage.removeItem('tournamentDataGroups'); [cite: 54]
         location.reload();
     }
 });
