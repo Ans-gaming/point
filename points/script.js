@@ -78,6 +78,9 @@ let previousRanks = {
     const allPlayed = teamData.every(t => (t.won + t.lost) === 14);
 
     tableBody.innerHTML = '';
+      
+    // ✅ All teams that have played any match so far
+    const involvedTeams = new Set(recentMatches[groupKey].flat());
 
     teamData.forEach((team, newIndex) => {
         const oldIndex = previousRanks[groupKey][team.name];
@@ -99,15 +102,8 @@ let previousRanks = {
                 blinkClass = "arrow-blink";
             }
         } else {
-            // After 4th match → pair arrows logic
-            if (matchCount[groupKey] >= 4) {
-                // Example: pair arrows 1↔3, 4↔6
-                const index = newIndex + 1; // 1-based
-                if (index === 1 || index === 3 || index === 4 || index === 6) {
-                    icon = "↔"; // or ▲/▼ depending on your design
-                    color = "blue";
-                }
-            }
+                icon = '–';
+                color = 'gray';
         }
 
         const played = team.won + team.lost;
@@ -244,16 +240,9 @@ let previousRanks = {
         calculateAndApplyScores(groupData[g], winner, loser, lostRounds);
         // Track match count
         matchCount[g] += 1;
-        
-        // Save recent matches (keep last 3 or 1 depending on count)
+
+        // ✅ Always keep all matches until tournament ends
         recentMatches[g].push([winner, loser]);
-        if (matchCount[g] <= 3) {
-            // keep last 3
-            if (recentMatches[g].length > 3) recentMatches[g].shift();
-        } else {
-            // after 4th → only keep last match
-            recentMatches[g] = [[winner, loser]];
-        }
 
         saveData();
         renderTable(g);
@@ -363,4 +352,5 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
