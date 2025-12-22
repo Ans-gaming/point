@@ -61,7 +61,11 @@ let previousRanks = {
     const teamData = groupData[groupKey];
     const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
 
-    function updateMovements(groupKey) {
+    const savePos = {};
+    teams.forEach((team, i) => savePos[team.name] = i + 1);
+    localStorage.setItem(`prevPos_${groupKey}`, JSON.stringify(savePos));
+}
+function updateMovements(groupKey) {
     const prevPos = JSON.parse(localStorage.getItem(`prevPos_${groupKey}`)) || {};
     const teams = groupData[groupKey];
 
@@ -79,12 +83,6 @@ let previousRanks = {
             team.movement = "-";
         }
     });
-
-    const savePos = {};
-    teams.forEach((team, i) => savePos[team.name] = i + 1);
-    localStorage.setItem(`prevPos_${groupKey}`, JSON.stringify(savePos));
-}
-
 
     // Sort normally
     teamData.sort((a, b) => {
@@ -152,7 +150,10 @@ let previousRanks = {
 
         tableBody.appendChild(row);
     });
-      
+      previousRanks[groupKey] = {};
+teamData.forEach((team, index) => {
+    previousRanks[groupKey][team.name] = index;
+});
 
 }
   
@@ -408,6 +409,7 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
 
 
 
