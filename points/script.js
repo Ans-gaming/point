@@ -209,29 +209,78 @@ let previousRanks = {
     document.getElementById('matchFormB').addEventListener('submit', handleFormSubmit);
 
     function handleFormSubmit(e) {
-        e.preventDefault();
+    e.preventDefault();
 
-        const g = e.target.getAttribute("data-group");
-        const winner = document.getElementById(`winningTeam${g}`).value;
-        const loser = document.getElementById(`losingTeam${g}`).value;
-        const lostRounds = parseInt(document.getElementById(`lostRounds${g}`).value);
+    const g = e.target.getAttribute("data-group");
+    const winnerSel = document.getElementById(`winningTeam${g}`);
+    const loserSel = document.getElementById(`losingTeam${g}`);
+    const roundsSel = document.getElementById(`lostRounds${g}`);
 
-        if (!winner || !loser || winner === loser) {
-            alert("Select valid teams.");
-            return;
-        }
-        if (lostRounds < 0 || lostRounds > 7) {
-            alert("Lost rounds must be 0–7.");
-            return;
-        }
+    const winner = winnerSel.value;
+    const loser = loserSel.value;
+    const lostRounds = roundsSel.value;
 
-        calculateAndApplyScores(groupData[g], winner, loser, lostRounds);
+    const hasWinner = winnerSel.selectedIndex !== 0;
+    const hasLoser = loserSel.selectedIndex !== 0;
+    const hasRounds = lostRounds !== "" && lostRounds !== null;
 
-        saveData();
-        renderTable(g);
-        e.target.reset();
-        populateTeamSelects(g);
+    /* -------------------------------------------------
+       🔥 PERFECT VALIDATION MATRIX (as you requested)
+    --------------------------------------------------*/
+
+    // 1️⃣ Only Winner selected
+    if (hasWinner && !hasLoser && !hasRounds) {
+        alert("Select Losing Team Name & Loser's Rounds (0–7).");
+        return;
     }
+
+    // 2️⃣ Only Loser selected
+    if (!hasWinner && hasLoser && !hasRounds) {
+        alert("Select Winning Team Name & Loser's Rounds (0–7).");
+        return;
+    }
+
+    // 3️⃣ Only Rounds selected
+    if (!hasWinner && !hasLoser && hasRounds) {
+        alert("Select Winning Team Name & Losing Team Name.");
+        return;
+    }
+
+    // 4️⃣ Loser + Rounds selected
+    if (!hasWinner && hasLoser && hasRounds) {
+        alert("Select Winning Team Name.");
+        return;
+    }
+
+    // 5️⃣ Winner + Rounds selected
+    if (hasWinner && !hasLoser && hasRounds) {
+        alert("Select Losing Team Name.");
+        return;
+    }
+
+    // ❌ Winner & Loser same
+    if (winner === loser) {
+        alert("Winning Team and Losing Team cannot be the same.");
+        return;
+    }
+
+    // ❌ Rounds range check
+    const roundsNum = parseInt(lostRounds);
+    if (isNaN(roundsNum) || roundsNum < 0 || roundsNum > 7) {
+        alert("Loser's Rounds must be between 0 and 7.");
+        return;
+    }
+
+    /* -------------------------------------------------
+       ✅ ALL VALID → APPLY RESULT
+    --------------------------------------------------*/
+    calculateAndApplyScores(groupData[g], winner, loser, roundsNum);
+
+    saveData();
+    renderTable(g);
+    e.target.reset();
+    populateTeamSelects(g);
+}
 
     // ------------------------------------------------------
     // ⭐⭐⭐ TIE BREAKER SYSTEM ⭐⭐⭐
@@ -335,3 +384,4 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
