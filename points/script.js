@@ -85,7 +85,7 @@ if (savedRanks) {
         return b.roundsPoints - a.roundsPoints;
     });
 
-    // ⭐ Check if ALL teams played 9 matches
+    // ⭐ Check if ALL teams played 14 matches
     const allPlayed = teamData.every(t => (t.won + t.lost) === 14);
 
     tableBody.innerHTML = '';
@@ -449,3 +449,4 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
