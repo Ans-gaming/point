@@ -449,12 +449,3 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
-
-
-
-
-
-
-
-
-
