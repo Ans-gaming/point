@@ -3,6 +3,10 @@ const HISTORY_KEY = 'tournamentHistory';
 
 let groupData;
 
+function saveData() {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(groupData));
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // 1. INITIAL DATA STORE
@@ -49,9 +53,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    function saveData() {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(groupData));
-    }
 let previousRanks = {
     A: {},
     B: {}
@@ -421,4 +422,5 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
