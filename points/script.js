@@ -1,6 +1,5 @@
 const STORAGE_KEY = 'tournamentDataGroups';
 const HISTORY_KEY = 'tournamentHistory';
-const RANK_KEY = "previousRanks";
 
 let groupData;
 
@@ -49,36 +48,24 @@ document.addEventListener('DOMContentLoaded', () => {
         if (saved) {
             groupData = JSON.parse(saved);  // load saved data
         } else {
-            groupData = JSON.parse(JSON.stringify(groupDataDefaults));
+            groupData = groupDataDefaults;  // first time only
             saveData();
         }
     }
-    
-// ✅ Declare first
+
 let previousRanks = {
     A: {},
     B: {}
 };
-
-let ranksLoadedFromStorage = false;
-
-const savedRanks = localStorage.getItem(RANK_KEY);
-if (savedRanks) {
-    previousRanks = JSON.parse(savedRanks);
-    ranksLoadedFromStorage = true; // ✅ IMPORTANT
-}
 
     // RENDER TABLE
   function renderTable(groupKey) {
     const teamData = groupData[groupKey];
     const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
 
-    // ✅ Build baseline ONLY if ranks were NOT loaded from storage
-      if (!ranksLoadedFromStorage && Object.keys(previousRanks[groupKey]).length === 0) {
-          teamData.forEach((t, i) => {
-          previousRanks[groupKey][t.name] = i;
-          });
-      }
+    const oldOrder = [...teamData].map(t => t.name);
+    previousRanks[groupKey] = {};
+    oldOrder.forEach((name, index) => previousRanks[groupKey][name] = index);
 
     // Sort normally
     teamData.sort((a, b) => {
@@ -87,7 +74,7 @@ if (savedRanks) {
         return b.roundsPoints - a.roundsPoints;
     });
 
-    // ⭐ Check if ALL teams played 14 matches
+    // ⭐ Check if ALL teams played 9 matches
     const allPlayed = teamData.every(t => (t.won + t.lost) === 14);
 
     tableBody.innerHTML = '';
@@ -99,16 +86,14 @@ if (savedRanks) {
         let color = "gray";
         let blinkClass = "";
 
-        if (oldIndex !== undefined) {
-            if (oldIndex > newIndex) {
-                icon = "▲";
-                color = "green";
-                blinkClass = "arrow-blink";
-            } else if (oldIndex < newIndex) {
-                icon = "▼";
-                color = "red";
-                blinkClass = "arrow-blink";
-            }
+        if (oldIndex > newIndex) {
+            icon = "▲";
+            color = "green";
+            blinkClass = "arrow-blink";
+        } else if (oldIndex < newIndex) {
+            icon = "▼";
+            color = "red";
+            blinkClass = "arrow-blink";
         }
 
         const played = team.won + team.lost;
@@ -147,14 +132,6 @@ if (savedRanks) {
 
         tableBody.appendChild(row);
     });
-      // ✅ CORRECT PLACE — update previousRanks ONCE
-previousRanks[groupKey] = {};
-teamData.forEach((t, i) => {
-    previousRanks[groupKey][t.name] = i;
-});
-      
-// ✅ Persist ranks
-localStorage.setItem(RANK_KEY, JSON.stringify(previousRanks));
 }
   
     // POPULATE DROPDOWNS
@@ -412,7 +389,6 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
     if (confirm("Are you sure? This will clear all tournament data.")) {
         localStorage.removeItem('tournamentDataGroups');
         localStorage.removeItem('tournamentHistory');
-        localStorage.removeItem('previousRanks');
         alert("Data cleared! Page will reload.");
         location.reload();
     }
@@ -451,6 +427,3 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
-
-
-
