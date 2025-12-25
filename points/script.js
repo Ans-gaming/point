@@ -1,6 +1,8 @@
 const STORAGE_KEY = 'tournamentDataGroups';
 const HISTORY_KEY = 'tournamentHistory';
 
+let groupData;
+
 document.addEventListener('DOMContentLoaded', () => {
     
     // 1. INITIAL DATA STORE
@@ -26,8 +28,6 @@ document.addEventListener('DOMContentLoaded', () => {
             { name: "MRAK", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ]
     };
-
-    let groupData;
 
     // POINT RULES
     const ROUNDS_MAPPING = { 
@@ -421,3 +421,4 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
