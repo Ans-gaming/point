@@ -1,5 +1,6 @@
 const STORAGE_KEY = 'tournamentDataGroups';
 const HISTORY_KEY = 'tournamentHistory';
+const RANK_KEY = "previousRanks";
 
 let groupData;
 
@@ -51,6 +52,11 @@ document.addEventListener('DOMContentLoaded', () => {
             groupData = groupDataDefaults;  // first time only
             saveData();
         }
+    }
+
+    const savedRanks = localStorage.getItem(RANK_KEY);
+    if (savedRanks) {
+        previousRanks = JSON.parse(savedRanks);
     }
 
 let previousRanks = {
@@ -142,6 +148,9 @@ previousRanks[groupKey] = {};
 teamData.forEach((t, i) => {
     previousRanks[groupKey][t.name] = i;
 });
+      
+// ✅ Persist ranks
+localStorage.setItem(RANK_KEY, JSON.stringify(previousRanks));
 }
   
     // POPULATE DROPDOWNS
@@ -399,6 +408,7 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
     if (confirm("Are you sure? This will clear all tournament data.")) {
         localStorage.removeItem('tournamentDataGroups');
         localStorage.removeItem('tournamentHistory');
+        localStorage.removeItem('previousRanks');
         alert("Data cleared! Page will reload.");
         location.reload();
     }
@@ -437,6 +447,7 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
 
 
