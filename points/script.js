@@ -1,7 +1,7 @@
+const STORAGE_KEY = 'tournamentDataGroups';
+const HISTORY_KEY = 'tournamentHistory';
+
 document.addEventListener('DOMContentLoaded', () => {
-    
-    const STORAGE_KEY = 'tournamentDataGroups';
-    const HISTORY_KEY = 'tournamentHistory';
     
     // 1. INITIAL DATA STORE
     let groupDataDefaults = {
@@ -382,6 +382,7 @@ let previousRanks = {
 document.getElementById("resetDataBtn").addEventListener("click", () => {
     if (confirm("Are you sure? This will clear all tournament data.")) {
         localStorage.removeItem('tournamentDataGroups');
+        localStorage.removeItem('tournamentHistory');
         alert("Data cleared! Page will reload.");
         location.reload();
     }
@@ -414,3 +415,9 @@ function undoLastEntry() {
 
     alert("Last entry deleted successfully!");
 }
+
+document.getElementById("undoLastBtn").addEventListener("click", () => {
+    if (confirm("Delete last match entry?")) {
+        undoLastEntry();
+    }
+});
