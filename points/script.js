@@ -320,7 +320,9 @@ let previousRanks = {
 
     // FINAL TIE BREAKER FUNCTION (PLAYED+1, LOST+1, -ROUNDS)
     function applyTieBreaker(groupKey, team1, team2, penalty) {
-
+        
+        saveHistory(); // ✅ 🔥 THIS IS THE MISSING LINE
+        
         const arr = groupData[groupKey];
         const t1 = arr.find(t => t.name === team1);
         const t2 = arr.find(t => t.name === team2);
@@ -425,6 +427,7 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
 
 
