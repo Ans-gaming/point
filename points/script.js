@@ -53,16 +53,18 @@ document.addEventListener('DOMContentLoaded', () => {
             saveData();
         }
     }
-
-    const savedRanks = localStorage.getItem(RANK_KEY);
-    if (savedRanks) {
-        previousRanks = JSON.parse(savedRanks);
-    }
-
+    
+// ✅ Declare first
 let previousRanks = {
     A: {},
     B: {}
 };
+
+// ✅ THEN load from localStorage
+const savedRanks = localStorage.getItem(RANK_KEY);
+if (savedRanks) {
+    previousRanks = JSON.parse(savedRanks);
+}
 
     // RENDER TABLE
   function renderTable(groupKey) {
@@ -447,6 +449,7 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
 
 
