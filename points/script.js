@@ -377,6 +377,9 @@ let previousRanks = {
 
     document.getElementById("winningTeamA").addEventListener("change", () => filterLoserSelect("A"));
     document.getElementById("winningTeamB").addEventListener("change", () => filterLoserSelect("B"));
+    // 🔓 Expose functions for undoLastEntry (CORRECT PLACE)
+    window.renderTable = renderTable;
+    window.populateTeamSelects = populateTeamSelects;
 
 });
 
@@ -387,9 +390,6 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         alert("Data cleared! Page will reload.");
         location.reload();
     }
-// 🔓 Expose functions for undoLastEntry (DO NOT MOVE FUNCTIONS)
-window.renderTable = renderTable;
-window.populateTeamSelects = populateTeamSelects;
 });
 
 function saveHistory() {
@@ -425,6 +425,7 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
 
 
