@@ -60,10 +60,12 @@ let previousRanks = {
     B: {}
 };
 
-// ✅ THEN load from localStorage
+let ranksLoadedFromStorage = false;
+
 const savedRanks = localStorage.getItem(RANK_KEY);
 if (savedRanks) {
     previousRanks = JSON.parse(savedRanks);
+    ranksLoadedFromStorage = true; // ✅ IMPORTANT
 }
 
     // RENDER TABLE
@@ -71,13 +73,13 @@ if (savedRanks) {
     const teamData = groupData[groupKey];
     const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
 
-    // ✅ store previous ranks ONCE (if empty)
-    if (Object.keys(previousRanks[groupKey]).length === 0) {
-        teamData.forEach((t, i) => {
-            previousRanks[groupKey][t.name] = i;
-        });
-    }
-      
+    // ✅ Build baseline ONLY if ranks were NOT loaded from storage
+      if (!ranksLoadedFromStorage && Object.keys(previousRanks[groupKey]).length === 0) {
+          teamData.forEach((t, i) => {
+          previousRanks[groupKey][t.name] = i;
+          });
+      }
+
     // Sort normally
     teamData.sort((a, b) => {
         if (b.totalPoints !== a.totalPoints)
@@ -449,5 +451,6 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
 
