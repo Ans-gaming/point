@@ -1,6 +1,7 @@
 document.addEventListener('DOMContentLoaded', () => {
     
     const STORAGE_KEY = 'tournamentDataGroups';
+    const HISTORY_KEY = 'tournamentHistory';
     
     // 1. INITIAL DATA STORE
     let groupDataDefaults = {
@@ -270,7 +271,8 @@ let previousRanks = {
         alert("Loser's Rounds must be between 0 and 7.");
         return;
     }
-
+        
+    saveHistory(); // ✅ SAVE STATE BEFORE CHANGE
     /* -------------------------------------------------
        ✅ ALL VALID → APPLY RESULT
     --------------------------------------------------*/
@@ -384,3 +386,31 @@ document.getElementById("resetDataBtn").addEventListener("click", () => {
         location.reload();
     }
 });
+
+function saveHistory() {
+    const history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+    history.push(JSON.stringify(groupData));
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+}
+
+function undoLastEntry() {
+    const history = JSON.parse(localStorage.getItem(HISTORY_KEY)) || [];
+
+    if (history.length === 0) {
+        alert("No last entry to delete.");
+        return;
+    }
+
+    const previousState = history.pop();
+    groupData = JSON.parse(previousState);
+
+    localStorage.setItem(HISTORY_KEY, JSON.stringify(history));
+    saveData();
+
+    renderTable("A");
+    renderTable("B");
+    populateTeamSelects("A");
+    populateTeamSelects("B");
+
+    alert("Last entry deleted successfully!");
+}
