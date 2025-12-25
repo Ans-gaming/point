@@ -63,10 +63,13 @@ let previousRanks = {
     const teamData = groupData[groupKey];
     const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
 
-    const oldOrder = [...teamData].map(t => t.name);
-    previousRanks[groupKey] = {};
-    oldOrder.forEach((name, index) => previousRanks[groupKey][name] = index);
-
+    // ✅ store previous ranks ONCE (if empty)
+    if (Object.keys(previousRanks[groupKey]).length === 0) {
+        teamData.forEach((t, i) => {
+            previousRanks[groupKey][t.name] = i;
+        });
+    }
+      
     // Sort normally
     teamData.sort((a, b) => {
         if (b.totalPoints !== a.totalPoints)
@@ -86,14 +89,16 @@ let previousRanks = {
         let color = "gray";
         let blinkClass = "";
 
-        if (oldIndex > newIndex) {
-            icon = "▲";
-            color = "green";
-            blinkClass = "arrow-blink";
-        } else if (oldIndex < newIndex) {
-            icon = "▼";
-            color = "red";
-            blinkClass = "arrow-blink";
+        if (oldIndex !== undefined) {
+            if (oldIndex > newIndex) {
+                icon = "▲";
+                color = "green";
+                blinkClass = "arrow-blink";
+            } else if (oldIndex < newIndex) {
+                icon = "▼";
+                color = "red";
+                blinkClass = "arrow-blink";
+            }
         }
 
         const played = team.won + team.lost;
@@ -131,6 +136,10 @@ let previousRanks = {
         }
 
         tableBody.appendChild(row);
+        // ✅ UPDATE previousRanks AFTER render
+        previousRanks[groupKey] = {};
+        teamData.forEach((t, i) => {
+        previousRanks[groupKey][t.name] = i;
     });
 }
   
@@ -427,6 +436,7 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
 
 
