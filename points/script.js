@@ -49,7 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (saved) {
             groupData = JSON.parse(saved);  // load saved data
         } else {
-            groupData = groupDataDefaults;  // first time only
+            groupData = JSON.parse(JSON.stringify(groupDataDefaults));
             saveData();
         }
     }
@@ -449,4 +449,5 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
