@@ -2,6 +2,7 @@ const STORAGE_KEY = 'tournamentDataGroups';
 const HISTORY_KEY = 'tournamentHistory';
 
 let groupData;
+let isInitialLoad = true;
 
 function saveData() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(groupData));
@@ -86,19 +87,23 @@ let previousRanks = {
         let color = "gray";
         let blinkClass = "";
 
-        if (oldIndex > newIndex) {
-            team.arrow = "▲";
-            icon = "▲";
-            color = "green";
-            blinkClass = "arrow-blink";
-        } else if (oldIndex < newIndex) {
-            team.arrow = "▼";
-            icon = "▼";
-            color = "red";
-            blinkClass = "arrow-blink";
-        } else {
-            icon = team.arrow || "–"; // ✅ KEEP previous arrow on reload
-        }
+        if (!isInitialLoad) {
+    if (oldIndex > newIndex) {
+        team.arrow = "▲";
+        icon = "▲";
+        color = "green";
+        blinkClass = "arrow-blink";
+    } else if (oldIndex < newIndex) {
+        team.arrow = "▼";
+        icon = "▼";
+        color = "red";
+        blinkClass = "arrow-blink";
+    } else {
+        icon = team.arrow || "–";
+    }
+} else {
+    icon = team.arrow || "–"; // 🔒 preserve on reload
+}
 
         const played = team.won + team.lost;
         const row = document.createElement('tr');
@@ -431,5 +436,6 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
 
