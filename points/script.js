@@ -82,20 +82,22 @@ let previousRanks = {
     teamData.forEach((team, newIndex) => {
         const oldIndex = previousRanks[groupKey][team.name];
 
-        let icon = "–";
+        let icon = team.arrow || "–";
         let color = "gray";
         let blinkClass = "";
 
         if (oldIndex > newIndex) {
             team.arrow = "▲";
+            icon = "▲";
             color = "green";
             blinkClass = "arrow-blink";
         } else if (oldIndex < newIndex) {
             team.arrow = "▼";
+            icon = "▼";
             color = "red";
             blinkClass = "arrow-blink";
         } else {
-            team.arrow = team.arrow || "–"; // KEEP previous arrow
+            icon = team.arrow || "–"; // ✅ KEEP previous arrow on reload
         }
 
         const played = team.won + team.lost;
@@ -429,4 +431,5 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
