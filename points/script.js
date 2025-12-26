@@ -2,7 +2,6 @@ const STORAGE_KEY = 'tournamentDataGroups';
 const HISTORY_KEY = 'tournamentHistory';
 
 let groupData;
-let isInitialLoad = true;
 
 function saveData() {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(groupData));
@@ -13,24 +12,24 @@ document.addEventListener('DOMContentLoaded', () => {
     // 1. INITIAL DATA STORE
     let groupDataDefaults = {
         A: [
-            { name: "VORTEX GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "VINAY GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "OTC", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "ANS GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "NIGHT HUNTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "AGENT 03", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "SMARTY BOY", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "THE SHIELD", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" }  
+            { name: "VORTEX GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "VINAY GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "OTC", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "ANS GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "NIGHT HUNTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "AGENT 03", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "SMARTY BOY", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "THE SHIELD", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }  
         ],
         B: [
-            { name: "DARK HUNTER", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "GAMER AADI", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "SKY SHOOTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "BLUE DEVIL", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "THE LEGEND", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "DEATH GUN", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" },
-            { name: "MRAK", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0, arrow: "–" }
+            { name: "DARK HUNTER", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "GAMER AADI", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "SKY SHOOTERS", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "KRACK GAMING", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "BLUE DEVIL", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "THE LEGEND", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "DEATH GUN", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 },
+            { name: "MRAK", won: 0, lost: 0, roundsPoints: 0, totalPoints: 0 }
         ]
     };
 
@@ -83,27 +82,19 @@ let previousRanks = {
     teamData.forEach((team, newIndex) => {
         const oldIndex = previousRanks[groupKey][team.name];
 
-        let icon = team.arrow || "–";
+        let icon = "–";
         let color = "gray";
         let blinkClass = "";
 
-        if (!isInitialLoad) {
-    if (oldIndex > newIndex) {
-        team.arrow = "▲";
-        icon = "▲";
-        color = "green";
-        blinkClass = "arrow-blink";
-    } else if (oldIndex < newIndex) {
-        team.arrow = "▼";
-        icon = "▼";
-        color = "red";
-        blinkClass = "arrow-blink";
-    } else {
-        icon = team.arrow || "–";
-    }
-} else {
-    icon = team.arrow || "–"; // 🔒 preserve on reload
-}
+        if (oldIndex > newIndex) {
+            icon = "▲";
+            color = "green";
+            blinkClass = "arrow-blink";
+        } else if (oldIndex < newIndex) {
+            icon = "▼";
+            color = "red";
+            blinkClass = "arrow-blink";
+        }
 
         const played = team.won + team.lost;
         const row = document.createElement('tr');
@@ -436,6 +427,3 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
-
-
-
