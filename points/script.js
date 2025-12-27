@@ -137,25 +137,15 @@ else {
             <td>${team.totalPoints}</td>
         `;
 
-        // ⭐ Highlight qualified / eliminated rows
-if (status === "Q") {
-    row.classList.add("qualified");
-}
-if (status === "E") {
-    row.classList.add("eliminated");
-}
+        // ⭐ Add highlight class AFTER all teams complete 9 matches
+        if (isQualified) {
+            row.classList.add("qualified");
+        }
 
         tableBody.appendChild(row);
     });
 }
-
-    // 🚫 If team is Qualified or Eliminated → NO arrows
-if (status === "Q" || status === "E") {
-    icon = "";        // remove ▲ ▼ –
-    color = "";
-    blinkClass = "";
-}
-
+  
     // POPULATE DROPDOWNS
  function populateTeamSelects(groupKey) {
     const winSel = document.getElementById(`winningTeam${groupKey}`);
@@ -449,8 +439,3 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
-
-
-
-
-
