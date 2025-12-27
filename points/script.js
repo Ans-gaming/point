@@ -137,11 +137,6 @@ else {
             <td>${team.totalPoints}</td>
         `;
 
-        // ⭐ Add highlight class AFTER all teams complete 9 matches
-        if (isQualified) {
-            row.classList.add("qualified");
-        }
-
         tableBody.appendChild(row);
     });
 }
@@ -439,3 +434,4 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
