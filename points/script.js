@@ -95,8 +95,6 @@ let previousRanks = {
             color = "red";
             blinkClass = "arrow-blink";
         }
-
-        const played = team.won + team.lost;
         const row = document.createElement('tr');
 
         // ⭐ Smooth slide animation
@@ -441,4 +439,5 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
