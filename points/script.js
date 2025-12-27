@@ -103,15 +103,29 @@ let previousRanks = {
         row.style.transform = `translateY(${(oldIndex - newIndex) * 10}px)`;
         setTimeout(() => row.style.transform = "translateY(0)", 20);
 
-        // ⭐ Qualification badge only when ALL played 9 matches
-        const isQualified = allPlayed && newIndex < 5;
-        const badge = isQualified ? `<span class="qualify-badge">Q</span>` : "";
+        const played = team.won + team.lost;
+
+// 🟢 Early qualification / elimination
+let status = ""; // "", "Q", "E"
+
+// BEFORE 14 MATCHES
+if (!allPlayed) {
+    if (team.won >= 9) status = "Q";
+    else if (team.lost >= 9) status = "E";
+}
+// AFTER 14 MATCHES
+else {
+    if (newIndex < 5) status = "Q";
+    else status = "E";
+}
 
         row.innerHTML = `
             <td>
         <span style="margin-right:5px;">
-            ${isQualified ? `<span class="qualify-badge">Q</span>` : ""}
-        </span>
+    ${status === "Q" ? `<span class="qualify-badge">Q</span>` : ""}
+    ${status === "E" ? `<span class="eliminate-badge">E</span>` : ""}
+</span>
+
         <span class="${blinkClass}" style="color:${color}; font-weight:bold; margin-right:5px;">
             ${icon}
         </span>
@@ -427,3 +441,4 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
