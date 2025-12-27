@@ -116,6 +116,12 @@ else {
     if (newIndex < 5) status = "Q";
     else status = "E";
 }
+        // 🚫 STOP arrows for Q / E teams
+if (status === "Q" || status === "E") {
+    icon = "";
+    color = "";
+    blinkClass = "";
+}
 
         row.innerHTML = `
             <td>
@@ -442,6 +448,7 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
 
 
