@@ -88,21 +88,15 @@ let previousRanks = {
 
         // 🔁 Arrow logic ONLY for teams without Q / E
 if (status === "") {
-    if (oldIndex > newIndex) {
-        icon = "▲";
-        color = "green";
-        blinkClass = "arrow-blink";
-    } else if (oldIndex < newIndex) {
-        icon = "▼";
-        color = "red";
-        blinkClass = "arrow-blink";
-    }
-} else {
-    icon = "";
-    color = "";
-    blinkClass = "";
+  if (oldIndex > newIndex) {
+    icon = "▲";
+    color = "green";
+    blinkClass = "arrow-blink";
+} else if (oldIndex < newIndex) {
+    icon = "▼";
+    color = "red";
+    blinkClass = "arrow-blink";
 }
-
         const row = document.createElement('tr');
 
         // ⭐ Smooth slide animation
