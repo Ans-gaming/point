@@ -109,7 +109,7 @@ let status = ""; // "", "Q", "E"
 // BEFORE 14 MATCHES
 if (!allPlayed) {
     if (team.won >= 9) status = "Q";
-    else if (team.lost >= 9) status = "E";
+    else if (team.lost >= 10) status = "E";
 }
 // AFTER 14 MATCHES
 else {
@@ -434,3 +434,4 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
