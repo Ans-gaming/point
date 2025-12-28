@@ -86,15 +86,23 @@ let previousRanks = {
         let color = "gray";
         let blinkClass = "";
 
-        if (oldIndex > newIndex) {
-            icon = "▲";
-            color = "green";
-            blinkClass = "arrow-blink";
-        } else if (oldIndex < newIndex) {
-            icon = "▼";
-            color = "red";
-            blinkClass = "arrow-blink";
-        }
+        // 🔁 Arrow logic ONLY for teams without Q / E
+if (status === "") {
+    if (oldIndex > newIndex) {
+        icon = "▲";
+        color = "green";
+        blinkClass = "arrow-blink";
+    } else if (oldIndex < newIndex) {
+        icon = "▼";
+        color = "red";
+        blinkClass = "arrow-blink";
+    }
+} else {
+    icon = "";
+    color = "";
+    blinkClass = "";
+}
+
         const row = document.createElement('tr');
 
         // ⭐ Smooth slide animation
@@ -434,4 +442,5 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
