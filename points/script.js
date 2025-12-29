@@ -63,9 +63,12 @@ let previousRanks = {
     const teamData = groupData[groupKey];
     const tableBody = document.querySelector(`#pointTable${groupKey} tbody`);
 
-    const oldOrder = [...teamData].map(t => t.name);
-    previousRanks[groupKey] = {};
-    oldOrder.forEach((name, index) => previousRanks[groupKey][name] = index);
+    // ✅ Only set previousRanks if empty
+if (Object.keys(previousRanks[groupKey]).length === 0) {
+    teamData.forEach((t, index) => {
+        previousRanks[groupKey][t.name] = index;
+    });
+}
 
     // Sort normally
     teamData.sort((a, b) => {
@@ -86,15 +89,22 @@ let previousRanks = {
         let color = "gray";
         let blinkClass = "";
 
-        if (oldIndex > newIndex) {
-            icon = "▲";
-            color = "green";
-            blinkClass = "arrow-blink";
-        } else if (oldIndex < newIndex) {
-            icon = "▼";
-            color = "red";
-            blinkClass = "arrow-blink";
-        }
+        // 🔁 Arrow logic ONLY for teams without Q / E
+if (status === "") {
+    if (oldIndex > newIndex) {
+        icon = "▲";
+        color = "green";
+        blinkClass = "arrow-blink";
+    } else if (oldIndex < newIndex) {
+        icon = "▼";
+        color = "red";
+        blinkClass = "arrow-blink";
+    }
+} else {
+    icon = "";
+    color = "";
+    blinkClass = "";
+}
         const row = document.createElement('tr');
 
         // ⭐ Smooth slide animation
@@ -434,4 +444,5 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
