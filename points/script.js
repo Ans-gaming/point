@@ -149,6 +149,12 @@ if (status === "") {
         `;
 
         tableBody.appendChild(row);
+        // ✅ Update previousRanks AFTER render
+previousRanks[groupKey] = {};
+teamData.forEach((t, i) => {
+    previousRanks[groupKey][t.name] = i;
+});
+
     });
 }
   
@@ -445,6 +451,7 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
 
 
