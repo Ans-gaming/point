@@ -80,8 +80,12 @@ if (Object.keys(previousRanks[groupKey]).length === 0) {
     // ⭐ Check if ALL teams played 9 matches
     const allPlayed = teamData.every(t => (t.won + t.lost) === 14);
 
-      
-// 🟢 Early qualification / elimination
+    tableBody.innerHTML = '';
+
+    teamData.forEach((team, newIndex) => {
+        const oldIndex = previousRanks[groupKey][team.name];
+
+        // 🟢 Early qualification / elimination
 let status = ""; // "", "Q", "E"
 
 // BEFORE 14 MATCHES
@@ -95,11 +99,6 @@ else {
     else status = "E";
 }
       
-    tableBody.innerHTML = '';
-
-    teamData.forEach((team, newIndex) => {
-        const oldIndex = previousRanks[groupKey][team.name];
-
         let icon = "–";
         let color = "gray";
         let blinkClass = "";
@@ -446,6 +445,7 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
 
 
