@@ -149,13 +149,12 @@ if (status === "") {
         `;
 
         tableBody.appendChild(row);
-        // ✅ Update previousRanks AFTER render
+    });
+              // ✅ Update previousRanks AFTER render
 previousRanks[groupKey] = {};
 teamData.forEach((t, i) => {
     previousRanks[groupKey][t.name] = i;
 });
-
-    });
 }
   
     // POPULATE DROPDOWNS
@@ -451,6 +450,7 @@ document.getElementById("undoLastBtn").addEventListener("click", () => {
         undoLastEntry();
     }
 });
+
 
 
 
