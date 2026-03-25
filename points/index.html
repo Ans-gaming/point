@@ -3,83 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tournament Manager</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Professional Tournament Standings - Group A & B</title>
+    <link rel="stylesheet" href="styles.css"> 
+    <link rel="icon" href="data:,">
 </head>
-
 <body>
 
-<header class="app-header">
-    <h1>🏆 TOURNAMENT MANAGER 🏆</h1>
-    <p>Create Your Own League</p>
-</header>
+    <header class="app-header">
+        <h1>🏆 OVERALL STANDINGS 🏆</h1>
+        <p>BATTLE OF SNIPERS SEASON 6</p>
+    </header>
 
-<main class="container">
+    <main class="container">
+        <div style="text-align: right; width: 100%; margin-top: 10px;">
+            <button id="resetDataBtn" style="padding:10px 20px; background:red; color:white; border:none; border-radius:6px; cursor:pointer;
+                font-weight:bold;">RESET ALL DATA</button>
 
-    <!-- ✅ CREATE TEAMS -->
-    <section class="group-section card">
-        <h2 class="group-title">Create Tournament</h2>
+            <button id="undoLastBtn" style="padding:10px 20px; background:#ff9800; color:white; border:none; border-radius:6px; cursor:pointer; 
+                font-weight:bold;">DELETE LAST ENTRY</button>
+        </div>
 
-        <div id="teamInputs"></div>
+        <div class="groups-wrapper">
+            <section class="group-section card">
+                <h2 class="group-title">Group A: Match Result Entry</h2>
+                <form id="matchFormA" data-group="A" class="match-input">
+                    <div class="form-group">
+                        <label for="winningTeamA">Winning Team:</label>
+                        <select id="winningTeamA" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="losingTeamA">Losing Team:</label>
+                        <select id="losingTeamA" required></select>
+                    </div>
+                    <div class="form-group rounds-input">
+                        <label for="lostRoundsA">Loser's Rounds (0-7):</label>
+                        <input type="number" id="lostRoundsA" min="0" max="7" required>
+                        <small>e.g., 8-0 win, enter 0.</small>
+                    </div>
+                    <div class="button-container">
+                        <button type="submit" class="btn btn-submit">Log Group A Result</button>
+                    </div>
+                </form>
+            
+                <hr class="separator">
 
-        <button id="addTeamBtn" class="btn-submit">+ Add Team</button>
-        <button id="createTournamentBtn" class="btn-submit">Create Tournament</button>
-    </section>
+                <h3 class="table-title">Group A Standings</h3>
+                <div class="table-scroll">
+                    <table id="pointTableA" class="point-table">
+                        <thead>
+                            <tr>
+                                <th>Team Name</th>
+                                <th>Played</th>
+                                <th>Won</th>
+                                <th>Lost</th>
+                                <th>Rounds Pts</th>
+                                <th>Total Pts</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
 
-    <!-- ACTION BUTTONS -->
-    <div style="text-align:right; margin:10px;">
-        <button id="resetDataBtn">RESET</button>
-        <button id="undoLastBtn">UNDO</button>
-    </div>
+            <section class="group-section card">
+                <h2 class="group-title">Group B: Match Result Entry</h2>
+                <form id="matchFormB" data-group="B" class="match-input">
+                    <div class="form-group">
+                        <label for="winningTeamB">Winning Team:</label>
+                        <select id="winningTeamB" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label for="losingTeamB">Losing Team:</label>
+                        <select id="losingTeamB" required></select>
+                    </div>
+                    <div class="form-group rounds-input">
+                        <label for="lostRoundsB">Loser's Rounds (0-7):</label>
+                        <input type="number" id="lostRoundsB" min="0" max="7" required>
+                        <small>e.g., 8-0 win, enter 0.</small>
+                    </div>
+                    <div class="button-container">
+                       <button type="submit" class="btn btn-submit">Log Group B Result</button>
+                    </div>
+                </form>
+                
+                <hr class="separator">
 
-    <div class="groups-wrapper">
+                <h3 class="table-title">Group B Standings</h3>
+                <div class="table-scroll">
+                    <table id="pointTableB" class="point-table">
+                        <thead>
+                            <tr>
+                                <th>Team Name</th>
+                                <th>Played</th>
+                                <th>Won</th>
+                                <th>Lost</th>
+                                <th>Rounds Pts</th>
+                                <th>Total Pts</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
 
-        <!-- GROUP A -->
+        <!-- ⭐⭐⭐ TIE BREAKER SECTION ⭐⭐⭐ -->
         <section class="group-section card">
-            <h2 class="group-title">Group A</h2>
+            <h2 class="group-title">Tie Breaker</h2>
 
-            <form id="matchFormA" data-group="A" class="match-input">
-                <select id="winningTeamA"></select>
-                <select id="losingTeamA"></select>
-                <input type="number" id="lostRoundsA" min="0" max="7">
-                <button type="submit">Submit</button>
-            </form>
+            <div class="form-group">
+                <label>Select Group:</label>
+                <select id="tieGroupSelect">
+                    <option value="A">Group A</option>
+                    <option value="B">Group B</option>
+                </select>
+            </div>
 
-            <table id="pointTableA">
-                <thead>
-                    <tr>
-                        <th>Team</th><th>P</th><th>W</th><th>L</th><th>RP</th><th>Pts</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
+            <div class="form-group">
+                <label>Team 1:</label>
+                <select id="tieTeam1"></select>
+            </div>
+
+            <div class="form-group">
+                <label>Team 2:</label>
+                <select id="tieTeam2"></select>
+            </div>
+
+            <div class="form-group">
+                <label>Penalty (Default 10):</label>
+                <input type="number" id="tiePenalty" value="10" min="1">
+            </div>
+
+            <button id="tieApplyBtn" class="btn btn-submit">Apply Tie Breaker</button>
         </section>
 
-        <!-- GROUP B -->
-        <section class="group-section card">
-            <h2 class="group-title">Group B</h2>
+    </main>
 
-            <form id="matchFormB" data-group="B" class="match-input">
-                <select id="winningTeamB"></select>
-                <select id="losingTeamB"></select>
-                <input type="number" id="lostRoundsB" min="0" max="7">
-                <button type="submit">Submit</button>
-            </form>
-
-            <table id="pointTableB">
-                <thead>
-                    <tr>
-                        <th>Team</th><th>P</th><th>W</th><th>L</th><th>RP</th><th>Pts</th>
-                    </tr>
-                </thead>
-                <tbody></tbody>
-            </table>
-        </section>
-
-    </div>
-
-</main>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
